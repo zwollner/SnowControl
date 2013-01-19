@@ -1,0 +1,5 @@
+name: SnowControl
+author: zwollner
+description: makes snow more 'real'
+main: com.zmanww.bukkit.SnowControl.SnowControl
+version: ${project.version}
