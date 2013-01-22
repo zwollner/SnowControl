@@ -23,11 +23,6 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler()
-	public void onCraftEvent(CraftItemEvent event) {
-		plugin.getLogger().info("CraftEvent");
-	}
-
-	@EventHandler()
 	public void blockBreak(BlockBreakEvent event) {
 		final Block block = event.getBlock();
 		if (block.getType() == Material.ICE) {

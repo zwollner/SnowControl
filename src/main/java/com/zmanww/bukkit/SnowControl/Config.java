@@ -1,5 +1,6 @@
 package com.zmanww.bukkit.SnowControl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class Config {
 	public List<Material> canAccumulateOn = new ArrayList<Material>();
 
 	private Config() {
-		// if (!new File(plugin.getDataFolder(), "config.yml").exists()) {
-		plugin.saveDefaultConfig();
-		// plugin.getConfig().options().copyDefaults(true);
-		// }
+		if (!new File(plugin.getDataFolder(), "config.yml").exists()) {
+			plugin.saveDefaultConfig();
+			plugin.getConfig().options().copyDefaults(true);
+		}
 
 		loadKeys();
 	}
