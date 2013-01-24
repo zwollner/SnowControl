@@ -1,9 +1,8 @@
 #
 #  SnowControl configuration
-#  First generated on ${project.version}
+#  Last updated with version: ${project.version}
 #
 #####
-
 #
 #  Settings for Snow Fall
 #  blocks can be listed as ID's or their names, but their names must be exactly as seen here: 
@@ -19,6 +18,7 @@ SnowFall: #this is only in biomes where snow falls naturally
     MeltingEnabled: true
     MeltingChance: 0.5 #percent 0-100
     MeltDownCompletely: false
+    ChanceToFallThrough: 50
     CanFallThrough: #Air is always assumed
         - LEAVES
     CanReplace: #Air is always assumed

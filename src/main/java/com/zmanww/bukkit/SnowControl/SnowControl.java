@@ -25,7 +25,7 @@ public class SnowControl extends JavaPlugin implements Listener {
 	}
 
 	public void onDisable() {
-		//this.saveConfig();
+		this.saveConfig();
 	}
 
 }

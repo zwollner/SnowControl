@@ -30,8 +30,10 @@ public class SnowMonitor implements Runnable {
 						for (int z = 0; z < 16; z++) {
 							int y = chunkSnap.getHighestBlockYAt(x, z);
 							Block block = chunk.getBlock(x, y, z);
-							if ((block.getType() == Material.SNOW || Config.getInstance().canAccumulateOn
-									.contains(block.getType())) && SnowManager.canSnowInBiome(block.getBiome())) {
+							if ((block.getType() == Material.SNOW
+									|| Config.getInstance().canAccumulateOn.contains(block.getType()) || Config
+										.getInstance().canReplace.contains(block.getType()))
+									&& SnowManager.canSnowInBiome(block.getBiome())) {
 								if (world.hasStorm() && Config.getInstance().isAccumulationEnabled()) {// Pile it up
 									if (rnd.nextFloat() <= Config.getInstance().getChanceToAccumulate()) {
 										SnowManager.increaseSnowLevel(new Location(world, block.getX(), block.getY(),

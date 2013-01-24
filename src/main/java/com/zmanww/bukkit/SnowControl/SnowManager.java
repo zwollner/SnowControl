@@ -2,6 +2,7 @@ package com.zmanww.bukkit.SnowControl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
@@ -89,7 +90,9 @@ public class SnowManager {
 				} else {
 					block.setType(Material.SNOW);
 				}
-				letItFall(block);// incase were adding snow on something that it can fall through
+				if (new Random(System.nanoTime()).nextFloat() <= Config.getInstance().getChanceToMelt()) {
+					letItFall(block);
+				}
 			}
 		}
 	}

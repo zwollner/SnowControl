@@ -18,9 +18,8 @@ public class Config {
 	private Config() {
 		if (!new File(plugin.getDataFolder(), "config.yml").exists()) {
 			plugin.saveDefaultConfig();
-			plugin.getConfig().options().copyDefaults(true);
 		}
-
+		plugin.getConfig().options().copyDefaults(true);
 		loadKeys();
 	}
 
@@ -75,6 +74,10 @@ public class Config {
 
 	public float getChanceToMelt() {
 		return (float) (plugin.getConfig().getDouble("SnowFall.MeltingChance", 10) / 100);
+	}
+	
+	public float getChanceToFallThrough() {
+		return (float) (plugin.getConfig().getDouble("SnowFall.ChanceToFallThrough", 50) / 100);
 	}
 
 	public long getSnowFallDelay() {
