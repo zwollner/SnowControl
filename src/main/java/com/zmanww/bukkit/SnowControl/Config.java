@@ -55,6 +55,10 @@ public class Config {
 		}
 		return instance;
 	}
+	
+	public boolean debugEnabled() {
+		return plugin.getConfig().getBoolean("debug", false);
+	}
 
 	public boolean isAccumulationEnabled() {
 		return plugin.getConfig().getBoolean("SnowFall.AccumulationEnabled", true);
@@ -75,7 +79,7 @@ public class Config {
 	public float getChanceToMelt() {
 		return (float) (plugin.getConfig().getDouble("SnowFall.MeltingChance", 10) / 100);
 	}
-	
+
 	public float getChanceToFallThrough() {
 		return (float) (plugin.getConfig().getDouble("SnowFall.ChanceToFallThrough", 50) / 100);
 	}
@@ -98,6 +102,10 @@ public class Config {
 		}
 
 		return (byte) retVal;
+	}
+
+	public boolean createPatches() {
+		return plugin.getConfig().getBoolean("Snowballs.CreatePatches", true);
 	}
 
 }

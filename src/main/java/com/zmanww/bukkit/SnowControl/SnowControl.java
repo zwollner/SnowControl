@@ -1,5 +1,7 @@
 package com.zmanww.bukkit.SnowControl;
 
+import java.util.logging.Level;
+
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,4 +30,10 @@ public class SnowControl extends JavaPlugin implements Listener {
 		this.saveConfig();
 	}
 
+	public void debugLog(String string) {
+		if (Config.getInstance().debugEnabled()) {
+			this.getLogger().log(Level.INFO, "<DEBUG> " + string);
+		}
+
+	}
 }

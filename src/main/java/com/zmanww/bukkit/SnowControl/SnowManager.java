@@ -171,5 +171,4 @@ public class SnowManager {
 		}
 		return -1;
 	}
-
 }

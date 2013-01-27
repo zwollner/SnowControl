@@ -5,92 +5,92 @@
 #####
 #
 #  Settings for Snow Fall
-#  blocks can be listed as ID's or their names, but their names must be exactly as seen here: 
+#  blocks can be listed as ID's or their names, 
+#  but names must be exactly as seen here: 
 #  http://jd.bukkit.org/apidocs/org/bukkit/Material.html
 ###
 SnowFall: #this is only in biomes where snow falls naturally
-    CheckEvery: 10 #number in seconds
-    AccumulationEnabled: true
-    AccumulationChance: 1 #percent 0-100
-    MaxAccumulationDefault: 7 # (0-7)
-    MaxAccumulationOverride: # Must match marerial name exactly
-        LEAVES: 3
-    MeltingEnabled: true
-    MeltingChance: 0.5 #percent 0-100
-    MeltDownCompletely: false
-    ChanceToFallThrough: 50
-    CanFallThrough: #Air is always assumed
-        - LEAVES
-    CanReplace: #Air is always assumed
-        -
-    CanAccumulateOn:
-        - BEDROCK
-        - BRICK
-        - CACTUS
-        - CLAY
-        - CLAY_BRICK
-        - DIAMOND
-        - DIAMOND_BLOCK
-        - DIAMOND_ORE
-        - DIRT
-        - EMERALD
-        - EMERALD_BLOCK
-        - EMERALD_ORE
-        - ENDER_STONE
-        - GOLD_BLOCK
-        - GOLD_ORE
-        - GRASS
-        - HUGE_MUSHROOM_1
-        - HUGE_MUSHROOM_2
-        - IRON_BLOCK
-        - IRON_ORE
-        - LAPIS_BLOCK
-        - LAPIS_ORE
-        - LEAVES
-        - LOG
-        - MELON_BLOCK
-        - MOSSY_COBBLESTONE
-        - NETHER_BRICK
-        - NETHERRACK
-        - OBSIDIAN
-        - PUMPKIN
-        - SAND
-        - SANDSTONE
-        - SMOOTH_BRICK
-        - SOIL
-        - STONE
-        - WOOD
-        - WOOL
+  CheckEvery: 10 #number in seconds
+  AccumulationEnabled: true
+  AccumulationChance: 1 #percent 0-100
+  MaxAccumulationDefault: 7 # (0-7)
+  MaxAccumulationOverride: # Must match marerial name exactly
+    LEAVES: 3
+  MeltingEnabled: true
+  MeltingChance: 0.5 #percent 0-100
+  MeltDownCompletely: false
+  ChanceToFallThrough: 50
+  CanFallThrough: #Air is always assumed
+    - LEAVES
+  CanReplace: #Air is always assumed
+    -
+  CanAccumulateOn:
+    - BEDROCK
+    - BRICK
+    - CACTUS
+    - CLAY
+    - CLAY_BRICK
+    - DIAMOND
+    - DIAMOND_BLOCK
+    - DIAMOND_ORE
+    - DIRT
+    - EMERALD
+    - EMERALD_BLOCK
+    - EMERALD_ORE
+    - ENDER_STONE
+    - GOLD_BLOCK
+    - GOLD_ORE
+    - GRASS
+    - HUGE_MUSHROOM_1
+    - HUGE_MUSHROOM_2
+    - IRON_BLOCK
+    - IRON_ORE
+    - LAPIS_BLOCK
+    - LAPIS_ORE
+    - LEAVES
+    - LOG
+    - MELON_BLOCK
+    - MOSSY_COBBLESTONE
+    - NETHER_BRICK
+    - NETHERRACK
+    - OBSIDIAN
+    - PUMPKIN
+    - SAND
+    - SANDSTONE
+    - SMOOTH_BRICK
+    - SOIL
+    - STONE
+    - WOOD
+    - WOOL
 
 #
 #  Settings for Snow on the ground
 ###
 Snow:
-    Mobs:
-        Slow: true #this could impact performance
-        Amplifier: 1
-    Players: 
-        Slow: false
-        Amplifier: 1
+  Mobs:
+    Slow: true #this could impact performance
+    Amplifier: 1
+  Players: 
+    Slow: false
+    Amplifier: 1
 
 #
 #  Settings for Snowballs
 ###
 Snowballs:
-    CreatePatches: true
-    PatchMeltingDelay: #in warmer biomes
-        Min: 1000 #in milliseconds
-        Max: 3000 #in milliseconds
-    ThrowDamage: 
-        Players: 
-            Damage: 0 #(1 = 0.5 Heart)
-        Mobs: 
-            Damage: 1 #(1 = 0.5 Heart)
-    SlowEffect: #when hit by a snowball
-        Players:
-            Duration: 3000 #in milliseconds
-            Amplifier: 2
-        Mobs:
-            Duration: 3000 #in milliseconds
-            Amplifier: 2
-            
+  CreatePatches: true
+  PatchMeltingDelay: #in warmer biomes
+    Min: 1000 #in milliseconds
+    Max: 3000 #in milliseconds
+  ThrowDamage: 
+    Players: 
+      Damage: 0 #(1 = 0.5 Heart)
+    Mobs: 
+      Damage: 1 #(1 = 0.5 Heart)
+  SlowEffect: #when hit by a snowball
+    Players:
+      Duration: 3000 #in milliseconds
+      Amplifier: 2
+    Mobs:
+      Duration: 3000 #in milliseconds
+      Amplifier: 2
