@@ -1,9 +1,11 @@
 package com.zmanww.bukkit.SnowControl;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 public class SnowControl extends JavaPlugin implements Listener {
 	public static SnowControl plugin;
@@ -23,6 +25,13 @@ public class SnowControl extends JavaPlugin implements Listener {
 						+ "sec.");
 		snowMonitorTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new SnowMonitor(plugin),
 				10L * 20L, Config.getInstance().getSnowFallDelay() * 20L);
+
+		try {
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e) {
+			// Failed to submit the stats :-(
+		}
 
 	}
 
