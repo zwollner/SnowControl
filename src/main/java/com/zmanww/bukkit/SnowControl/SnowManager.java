@@ -1,5 +1,6 @@
 package com.zmanww.bukkit.SnowControl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -108,10 +109,13 @@ public class SnowManager {
 
 	public static void decreaseSnowLevel(Location loc) {
 		Block block = loc.getBlock();
-		if (block.getType() == Material.SNOW) {
-			byte blkData = block.getData();
+		if (block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK) {
+			byte blkData = getSnowValue(block);
 			if (blkData >= getMinSurrounding(block) && blkData >= getMaxSurrounding(block) - 2) {
 				if (blkData > 0) {
+					if (block.getType() == Material.SNOW_BLOCK) {
+						block.setType(Material.SNOW);
+					}
 					block.setData((byte) (blkData - 1));
 				} else if ((Config.getInstance().meltDownCompletely())
 						|| (block.getRelative(BlockFace.DOWN).getType() == Material.SNOW)
@@ -157,6 +161,8 @@ public class SnowManager {
 
 		if (block.getType() == Material.SNOW) {
 			retVal = block.getData();
+		} else if (block.getType() == Material.SNOW_BLOCK) {
+			retVal = 7;
 		}
 		return retVal;
 
@@ -168,7 +174,33 @@ public class SnowManager {
 		}
 		if (block.getRelative(BlockFace.DOWN).getType() == Material.SNOW) {
 			return block.getRelative(BlockFace.DOWN).getData();
+		} else if (block.getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK) {
+			return 7;
 		}
 		return -1;
+	}
+
+	public static List<Block> getSnowBlocksUnder(Block block) {
+		ArrayList<Block> blocks = new ArrayList<Block>();
+		boolean done = false;
+		while (!done) {
+			Block tempBlk = block.getRelative(BlockFace.DOWN);
+			if (block.getType() != Material.SNOW && block.getType() != Material.SNOW_BLOCK) {
+				if (tempBlk.getType() == Material.SNOW || tempBlk.getType() == Material.SNOW_BLOCK) {
+					blocks.add(tempBlk);
+				}
+			}
+
+			if (!Config.getInstance().canFallThrough.contains(tempBlk.getType()) && tempBlk.getType() != Material.SNOW
+					&& tempBlk.getType() != Material.SNOW_BLOCK) {
+				// Can't fall through block, and it's not snow
+				done = true;
+			}
+
+			block = tempBlk;
+		}
+
+		return blocks;
+
 	}
 }

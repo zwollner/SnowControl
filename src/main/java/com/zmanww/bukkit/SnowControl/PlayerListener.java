@@ -1,17 +1,16 @@
 package com.zmanww.bukkit.SnowControl;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -52,14 +51,30 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler()
 	public void onBlockDamage(BlockDamageEvent event) {
 		if (Config.getInstance().debugEnabled()) {
 			if (event.getItemInHand().getType() == Material.STICK) {
-				event.getPlayer().sendMessage(event.getBlock().getType().name());
+				event.getPlayer().sendMessage(
+						event.getBlock().getType().name() + ":" + event.getBlock().getData() + " Light="
+								+ event.getBlock().getLightFromSky());
+
+				List<Block> snowBlocks = SnowManager.getSnowBlocksUnder(event.getBlock());
+				if ((event.getBlock().getType() == Material.SNOW || event.getBlock().getType() == Material.SNOW_BLOCK)) {
+					snowBlocks.add(event.getBlock());
+				}
+				for (Block blk : snowBlocks) {
+					event.getPlayer().sendMessage(
+							"under >" + blk.getType().name() + ":" + blk.getData() + " Light="
+									+ event.getBlock().getLightFromSky());
+				}
+
+				event.setCancelled(true);
+			} else if (event.getItemInHand().getType() == Material.BLAZE_ROD) {
+				event.getPlayer().sendMessage("Decreasing Snow Level");
+				SnowManager.decreaseSnowLevel(event.getBlock().getLocation());
 				event.setCancelled(true);
 			}
 		}
 	}
-
 }
