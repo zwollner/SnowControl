@@ -3,3 +3,13 @@ author: zwollner
 description: makes snow more 'real'
 main: com.zmanww.bukkit.SnowControl.SnowControl
 version: ${project.version}
+commands:
+  snowcontrol:
+    description: Primary command for SnowControl.
+    aliases: [sc]
+    usage:
+      - /<command> reload - Force the plugin to reload the config file.
+permissions:
+  snowcontrol.reload:
+    description: Force the plugin to reload the config file.
+    default: op

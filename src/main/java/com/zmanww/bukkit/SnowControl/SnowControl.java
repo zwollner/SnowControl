@@ -20,6 +20,8 @@ public class SnowControl extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(worldListener, this);
 
+		getCommand("snowcontrol").setExecutor(new CommandManager());
+
 		this.getLogger().info(
 				"Scheduling Monitor to start in 10sec... repeating every " + Config.getInstance().getSnowFallDelay()
 						+ "sec.");

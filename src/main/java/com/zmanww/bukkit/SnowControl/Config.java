@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.World;
 
 public class Config {
 	protected static final SnowControl plugin = SnowControl.plugin;
@@ -14,6 +15,7 @@ public class Config {
 	public List<Material> canReplace = new ArrayList<Material>();
 	public List<Material> canFallThrough = new ArrayList<Material>();
 	public List<Material> canAccumulateOn = new ArrayList<Material>();
+	public List<String> enabledWorlds = new ArrayList<String>();
 
 	private Config() {
 		if (!new File(plugin.getDataFolder(), "config.yml").exists()) {
@@ -21,6 +23,18 @@ public class Config {
 		}
 		plugin.getConfig().options().copyDefaults(true);
 		loadKeys();
+	}
+
+	public static Config getInstance() {
+		if (instance == null) {
+			instance = new Config();
+		}
+		return instance;
+	}
+
+	public void reload() {
+		plugin.reloadConfig(); // Force reload
+		instance = null;// Force all objects to reload.
 	}
 
 	private void loadKeys() {
@@ -31,6 +45,16 @@ public class Config {
 		canReplace.add(Material.AIR);
 
 		canAccumulateOn = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanAccumulateOn"));
+
+		if (plugin.getConfig().isSet(("SnowFall.EnabledWorlds"))) {
+			enabledWorlds = plugin.getConfig().getStringList("SnowFall.EnabledWorlds");
+		} else {
+			for (World world : plugin.getServer().getWorlds()) {
+				enabledWorlds.add(world.getName());
+			}
+			plugin.getConfig().set("SnowFall.EnabledWorlds", enabledWorlds);
+			plugin.saveConfig();
+		}
 
 	}
 
@@ -49,13 +73,6 @@ public class Config {
 		return retVal;
 	}
 
-	public static Config getInstance() {
-		if (instance == null) {
-			instance = new Config();
-		}
-		return instance;
-	}
-	
 	public boolean debugEnabled() {
 		return plugin.getConfig().getBoolean("debug", false);
 	}
@@ -102,10 +119,6 @@ public class Config {
 		}
 
 		return (byte) retVal;
-	}
-
-	public boolean createPatches() {
-		return plugin.getConfig().getBoolean("Snowballs.CreatePatches", true);
 	}
 
 }
