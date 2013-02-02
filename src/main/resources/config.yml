@@ -18,9 +18,9 @@ SnowFall: #this is only in biomes where snow falls naturally
     LEAVES: 3
   MeltingEnabled: true
   MeltingChance: 0.5 #percent 0-100
-  MeltDownCompletely: false
+  MeltDownCompletely: false #If true, snow could disappear during the day
   MinLightLevelToMelt: 11
-  ChanceToFallThrough: 80
+  ChanceToFallThrough: 80 #percent 0-100
   CanFallThrough: #Air is always assumed
     - LEAVES
   CanReplace: #Air is always assumed

@@ -138,7 +138,7 @@ public class SnowManager {
 		Block block = loc.getBlock();
 		if (block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK) {
 			byte blkData = getSnowValue(block);
-			if (blkData >= getMinSurrounding(block, (byte) 0) && blkData > getMaxSurrounding(block, (byte) 0) - 2) {
+			if (blkData >= getMinSurrounding(block, (byte) 0) && blkData > getMaxSurrounding(block, (byte) 0, true) - 2) {
 				if (blkData > 0) {
 					if (block.getType() == Material.SNOW_BLOCK) {
 						block.setType(Material.SNOW);
@@ -164,17 +164,21 @@ public class SnowManager {
 
 	}
 
-	public static byte getMaxSurrounding(final Block block, final byte def) {
+	public static byte getMaxSurrounding(final Block block, final byte def, final boolean ignoreBlocks) {
 		byte retVal = -1;
 
 		for (BlockFace face : directions) {
 			Block tempBlk = block.getRelative(face);
-			if (tempBlk.getType() == Material.SNOW || tempBlk.getType() == Material.SNOW_BLOCK) {
+			if (tempBlk.getType() == Material.SNOW || (tempBlk.getType() == Material.SNOW_BLOCK && !ignoreBlocks)) {
 				retVal = getSnowValue(tempBlk) > retVal ? getSnowValue(tempBlk) : retVal;
 			}
 		}
 
 		return retVal == -1 ? def : retVal;
+	}
+
+	public static byte getMaxSurrounding(final Block block, final byte def) {
+		return getMaxSurrounding(block, def, false);
 	}
 
 	public static byte getMinSurrounding(final Block block, final byte def) {
