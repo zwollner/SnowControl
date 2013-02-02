@@ -13,13 +13,14 @@ SnowFall: #this is only in biomes where snow falls naturally
   CheckEvery: 10 #number in seconds
   AccumulationEnabled: true
   AccumulationChance: 1 #percent 0-100
-  MaxAccumulationDefault: 7 # (0-7)
+  MaxAccumulationDefault: 8 # number of 'layers' of snow
   MaxAccumulationOverride: # Must match marerial name exactly
     LEAVES: 3
   MeltingEnabled: true
   MeltingChance: 0.5 #percent 0-100
   MeltDownCompletely: false
-  ChanceToFallThrough: 50
+  MinLightLevelToMelt: 11
+  ChanceToFallThrough: 80
   CanFallThrough: #Air is always assumed
     - LEAVES
   CanReplace: #Air is always assumed

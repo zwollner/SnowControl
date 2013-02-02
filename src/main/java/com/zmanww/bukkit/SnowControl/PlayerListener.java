@@ -53,7 +53,12 @@ public class PlayerListener implements Listener {
 	@EventHandler()
 	public void onBlockDamage(BlockDamageEvent event) {
 		if (Config.getInstance().debugEnabled()) {
+			Block block = event.getBlock();
 			if (event.getItemInHand().getType() == Material.STICK) {
+				int y = event.getBlock().getWorld().getHighestBlockYAt(block.getX(), block.getZ());
+				Block highBlk = SnowManager.getHighestNonAirBlock(block.getWorld().getBlockAt(block.getX(), y,
+						block.getZ()));
+				event.getPlayer().sendMessage("Highest: " + highBlk.getType().name());
 				event.getPlayer().sendMessage(
 						event.getBlock().getType().name() + ":" + event.getBlock().getData() + " Light="
 								+ event.getBlock().getLightFromSky());
@@ -67,11 +72,62 @@ public class PlayerListener implements Listener {
 							"under >" + blk.getType().name() + ":" + blk.getData() + " Light="
 									+ event.getBlock().getLightFromSky());
 				}
+				event.getPlayer().sendMessage("**");
+				event.setCancelled(true);
+			} else if (event.getItemInHand().getType() == Material.SNOW_BALL) {
+				event.getPlayer().sendMessage("CurrentDepth=" + SnowManager.getSnowDepth(block));
+				event.getPlayer().sendMessage("MinSurrounding=" + SnowManager.getMinSurrounding(block, (byte) -1));
+				event.getPlayer().sendMessage("MaxSurrounding=" + SnowManager.getMaxSurrounding(block, (byte) -1));
+				event.getPlayer().sendMessage("canSnowBeAdded=" + SnowManager.canSnowBeAdded(block));
+				event.getPlayer().sendMessage(
+						"canSnowBeAddedAbove=" + SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)));
 
+				List<Block> snowBlocks = SnowManager.getBlocksToIncreaseUnder(event.getBlock());
+				for (Block blk : snowBlocks) {
+					event.getPlayer().sendMessage("under>" + blk.getType().name() + ":" + blk.getData());
+				}
+				event.getPlayer().sendMessage("**");
+				event.setCancelled(true);
+			} else if (event.getItemInHand().getType() == Material.SNOW_BLOCK) {
+				event.getPlayer().sendMessage("Increasing Snow Level");
+
+				boolean canIncrease = false;
+				if (SnowManager.canSnowBeAdded(block)) {
+					canIncrease = true;
+				} else if (SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP))) {
+					block = block.getRelative(BlockFace.UP);
+					canIncrease = true;
+				}
+				if (canIncrease) {
+					SnowManager.increaseSnowLevel(new Location(block.getWorld(), block.getX(), block.getY(), block
+							.getZ()));
+					for (Block blk : SnowManager.getBlocksToIncreaseUnder(block)) {
+						SnowManager
+								.increaseSnowLevel(new Location(block.getWorld(), blk.getX(), blk.getY(), blk.getZ()));
+					}
+
+				}
+				event.getPlayer().sendMessage("**");
 				event.setCancelled(true);
 			} else if (event.getItemInHand().getType() == Material.BLAZE_ROD) {
 				event.getPlayer().sendMessage("Decreasing Snow Level");
-				SnowManager.decreaseSnowLevel(event.getBlock().getLocation());
+
+				List<Block> snowBlocks = SnowManager.getSnowBlocksUnder(block);
+				if ((block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK)) {
+					snowBlocks.add(block);
+				}
+				for (Block blk : snowBlocks) {
+					if (blk.getType() == Material.SNOW_BLOCK) {
+						blk.setType(Material.SNOW);
+						blk.setData((byte) 7);
+					}
+					if (blk.getLightFromSky() >= 12) {
+						// Melt it down
+						SnowManager.decreaseSnowLevel(new Location(event.getBlock().getWorld(), blk.getX(), blk.getY(),
+								blk.getZ()));
+					}
+				}
+				event.getPlayer().sendMessage("**");
 				event.setCancelled(true);
 			}
 		}

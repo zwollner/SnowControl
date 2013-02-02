@@ -45,6 +45,7 @@ public class Config {
 		canReplace.add(Material.AIR);
 
 		canAccumulateOn = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanAccumulateOn"));
+		canAccumulateOn.add(Material.SNOW_BLOCK);
 
 		if (plugin.getConfig().isSet(("SnowFall.EnabledWorlds"))) {
 			enabledWorlds = plugin.getConfig().getStringList("SnowFall.EnabledWorlds");
@@ -112,13 +113,17 @@ public class Config {
 	public byte getMaxAccumulation(Material mat) {
 		int retVal = plugin.getConfig().getInt("SnowFall.MaxAccumulationDefault", 7);
 		if (mat != null) {
-			retVal = plugin.getConfig().getInt("SnowFall.MaxAccumulationOverride." + mat.toString(), 7);
+			retVal = plugin.getConfig().getInt("SnowFall.MaxAccumulationOverride." + mat.toString(), retVal);
 		}
 		if (retVal < 0) {
 			retVal = 0;
 		}
 
 		return (byte) retVal;
+	}
+
+	public int getMinLightLevel() {
+		return plugin.getConfig().getInt("SnowFall.MinLightLevelToMelt", 12);
 	}
 
 }

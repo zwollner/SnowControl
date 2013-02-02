@@ -1,5 +1,6 @@
 package com.zmanww.bukkit.SnowControl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -30,43 +31,35 @@ public class SnowMonitor implements Runnable {
 				if (Config.getInstance().enabledWorlds.contains(world.getName())) {
 					plugin.debugLog("Checking " + world.getLoadedChunks().length + " chunks");
 					for (Chunk chunk : world.getLoadedChunks()) {
-						ChunkSnapshot chunkSnap = chunk.getChunkSnapshot();
+						ChunkSnapshot chunkSnap = chunk.getChunkSnapshot(true, false, false);
 						for (int x = 0; x < 16; x++) {
 							for (int z = 0; z < 16; z++) {
 								int y = chunkSnap.getHighestBlockYAt(x, z);
-								Block block = chunk.getBlock(x, y, z);
+								Block block = SnowManager.getHighestNonAirBlock(chunk.getBlock(x, y, z));
 								if (SnowManager.canSnowInBiome(block.getBiome())) {
 									if (world.hasStorm()) {
-										if (((block.getType() == Material.SNOW
-												|| Config.getInstance().canAccumulateOn.contains(block.getType()) || Config
-													.getInstance().canReplace.contains(block.getType())))
-												&& block.getType() != Material.AIR) {
-											if (world.hasStorm() && Config.getInstance().isAccumulationEnabled()) {// Pile
-																													// it
-																													// up
-												/*
-												 * If this block isn't snow, and snow can fall on it, we need to use the
-												 * block above to to actually accumulate the snow.
-												 */
-												if (Config.getInstance().canAccumulateOn.contains(block.getType())
-														&& block.getType() != Material.SNOW
-														&& Config.getInstance().canReplace.contains(block
-																.getRelative(BlockFace.UP))) {
-
+										if (Config.getInstance().isAccumulationEnabled()) {
+											if (rnd.nextFloat() <= Config.getInstance().getChanceToAccumulate()) {
+												boolean canIncrease = false;
+												if (SnowManager.canSnowBeAdded(block)) {
+													canIncrease = true;
+												} else if (SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP))) {
 													block = block.getRelative(BlockFace.UP);
+													canIncrease = true;
 												}
-												if (Config.getInstance().debugEnabled()
-														&& block.getType() != Material.SNOW
-														&& block.getType() != Material.GRASS) {
-													plugin.debugLog("Accumulating snow on: " + block.getType().name());
-												}
-												if (rnd.nextFloat() <= Config.getInstance().getChanceToAccumulate()) {
+												if (canIncrease) {
 													SnowManager.increaseSnowLevel(new Location(world, block.getX(),
 															block.getY(), block.getZ()));
+													for (Block blk : SnowManager.getBlocksToIncreaseUnder(block)) {
+														SnowManager.increaseSnowLevel(new Location(world, blk.getX(),
+																blk.getY(), blk.getZ()));
+													}
+
 												}
 											}
+
 										}
-									} else {
+									} else {// No Storm
 										if (Config.getInstance().isMeltingEnabled()
 												&& block.getType() != Material.AIR
 												&& (Config.getInstance().canFallThrough.contains(block.getType()) || (block
@@ -81,7 +74,15 @@ public class SnowMonitor implements Runnable {
 												snowBlocks.add(block);
 											}
 											for (Block blk : snowBlocks) {
-												if (blk.getLightFromSky() >= 12) {
+												/*
+												 * Stupid hack because bukkit does not return light level for
+												 * SNOW_BLOCKS
+												 */
+												if (blk.getType() == Material.SNOW_BLOCK) {
+													blk.setType(Material.SNOW);
+													blk.setData((byte) 7);
+												}
+												if (blk.getLightFromSky() >= Config.getInstance().getMinLightLevel()) {
 													// Melt it down
 													if (rnd.nextFloat() <= Config.getInstance().getChanceToMelt()) {
 														SnowManager.decreaseSnowLevel(new Location(world, blk.getX(),
