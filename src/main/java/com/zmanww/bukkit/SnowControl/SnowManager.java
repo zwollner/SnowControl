@@ -19,18 +19,18 @@ public class SnowManager {
 			BlockFace.NORTH, BlockFace.NORTH_WEST, BlockFace.WEST, BlockFace.SOUTH_WEST, BlockFace.SOUTH,
 			BlockFace.SOUTH_EAST);
 
-	public static void checkChunk(Chunk chunk) {
-		final ChunkSnapshot chunkSnap = chunk.getChunkSnapshot(true, false, false);
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				final int y = chunkSnap.getHighestBlockYAt(x, z);
-				Block block = chunk.getBlock(x, y, z);
-				if (block.getType() == Material.SNOW) {
-					letItFall(block);
-				}
-			}
-		}
-	}
+//	public static void checkChunk(Chunk chunk) {
+//		final ChunkSnapshot chunkSnap = chunk.getChunkSnapshot(true, false, false);
+//		for (int x = 0; x < 16; x++) {
+//			for (int z = 0; z < 16; z++) {
+//				final int y = chunkSnap.getHighestBlockYAt(x, z);
+//				Block block = chunk.getBlock(x, y, z);
+//				if (block.getType() == Material.SNOW) {
+//					letItFall(block);
+//				}
+//			}
+//		}
+//	}
 
 	public static void letItFall(final Block block) {
 		letItFall(block, false);

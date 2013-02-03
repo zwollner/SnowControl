@@ -21,10 +21,10 @@ public class WorldListener implements Listener {
 		plugin = instance;
 	}
 
-	@EventHandler()
-	public void chunkLoad(ChunkLoadEvent event) {
-		SnowManager.checkChunk(event.getChunk());
-	}
+//	@EventHandler()
+//	public void chunkLoad(ChunkLoadEvent event) {
+//		SnowManager.checkChunk(event.getChunk());
+//	}
 
 	@EventHandler()
 	public void snowForm(BlockFormEvent event) {
