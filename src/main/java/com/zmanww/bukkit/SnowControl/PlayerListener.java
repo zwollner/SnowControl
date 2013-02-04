@@ -99,11 +99,9 @@ public class PlayerListener implements Listener {
 					canIncrease = true;
 				}
 				if (canIncrease) {
-					SnowManager.increaseSnowLevel(new Location(block.getWorld(), block.getX(), block.getY(), block
-							.getZ()));
+					SnowManager.increaseSnowLevel(block);
 					for (Block blk : SnowManager.getBlocksToIncreaseUnder(block)) {
-						SnowManager
-								.increaseSnowLevel(new Location(block.getWorld(), blk.getX(), blk.getY(), blk.getZ()));
+						SnowManager.increaseSnowLevel(blk);
 					}
 
 				}

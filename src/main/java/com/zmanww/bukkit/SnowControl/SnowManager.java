@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -19,72 +17,7 @@ public class SnowManager {
 			BlockFace.NORTH, BlockFace.NORTH_WEST, BlockFace.WEST, BlockFace.SOUTH_WEST, BlockFace.SOUTH,
 			BlockFace.SOUTH_EAST);
 
-//	public static void checkChunk(Chunk chunk) {
-//		final ChunkSnapshot chunkSnap = chunk.getChunkSnapshot(true, false, false);
-//		for (int x = 0; x < 16; x++) {
-//			for (int z = 0; z < 16; z++) {
-//				final int y = chunkSnap.getHighestBlockYAt(x, z);
-//				Block block = chunk.getBlock(x, y, z);
-//				if (block.getType() == Material.SNOW) {
-//					letItFall(block);
-//				}
-//			}
-//		}
-//	}
-
-	public static void letItFall(final Block block) {
-		letItFall(block, false);
-	}
-
-	public static void letItFall(final Block block, final boolean dropAll) {
-		byte snowLevel = block.getData();
-
-		// S - block
-		// L
-		// A - loop starts with this one as cur
-		// A
-		// B
-		final Config config = Config.getInstance();
-		Block curBlock = block.getRelative(BlockFace.DOWN);
-		boolean done = false;
-		if (!config.canFallThrough.contains(curBlock.getType())) {
-			done = true;
-		}
-		while (!done) {
-			curBlock = curBlock.getRelative(BlockFace.DOWN);
-			Block blockAbove = curBlock.getRelative(BlockFace.UP);
-			if (config.canAccumulateOn.contains(curBlock.getType())) {
-				if (config.canReplace.contains(blockAbove.getType()) || blockAbove.getType() == Material.SNOW) {
-
-					if (blockAbove.getLightFromBlocks() <= 10) {// Not near torches
-						if (!dropAll) {
-							snowLevel = 0;
-						}
-						if (blockAbove.getType() == Material.SNOW) {
-							snowLevel += blockAbove.getData() + 1;
-						}
-						if (snowLevel > config.getMaxAccumulation(curBlock.getType())) {
-							snowLevel = config.getMaxAccumulation(curBlock.getType());
-						}
-						if (shouldIncrease(blockAbove, (byte) (snowLevel - 1))) {
-							blockAbove.setType(Material.SNOW);
-							blockAbove.setData(snowLevel);
-						}
-
-					}
-				}
-			} else if (curBlock.getType() == Material.STATIONARY_WATER) {
-				curBlock.setType(Material.ICE);
-			}
-
-			if (!config.canFallThrough.contains(curBlock.getType()) && curBlock.getType() != Material.SNOW) {
-				done = true;
-			}
-		}
-	}
-
-	public static void increaseSnowLevel(Location loc) {
-		Block block = loc.getBlock();
+	public static void increaseSnowLevel(Block block) {
 		byte blkData = (block.getType() == Material.SNOW ? block.getData() : 0);
 		if (blkData <= 6) {
 			if (shouldIncrease(block, blkData)

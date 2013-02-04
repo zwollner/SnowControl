@@ -6,9 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
 
 /**
  * @author zwollner
@@ -19,18 +17,6 @@ public class WorldListener implements Listener {
 
 	public WorldListener(SnowControl instance) {
 		plugin = instance;
-	}
-
-//	@EventHandler()
-//	public void chunkLoad(ChunkLoadEvent event) {
-//		SnowManager.checkChunk(event.getChunk());
-//	}
-
-	@EventHandler()
-	public void snowForm(BlockFormEvent event) {
-		if (event.getNewState().getType() == Material.SNOW) {
-			SnowManager.letItFall(event.getBlock());
-		}
 	}
 
 	@EventHandler()

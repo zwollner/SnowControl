@@ -51,7 +51,9 @@ public class Config {
 			enabledWorlds = plugin.getConfig().getStringList("SnowFall.EnabledWorlds");
 		} else {
 			for (World world : plugin.getServer().getWorlds()) {
-				enabledWorlds.add(world.getName());
+				if (!world.getName().contains("_nether") && !world.getName().contains("_the_end")) {
+					enabledWorlds.add(world.getName());
+				}
 			}
 			plugin.getConfig().set("SnowFall.EnabledWorlds", enabledWorlds);
 			plugin.saveConfig();
