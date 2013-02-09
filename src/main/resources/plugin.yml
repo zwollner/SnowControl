@@ -9,7 +9,19 @@ commands:
     aliases: [sc]
     usage:
       - /<command> reload - Force the plugin to reload the config file.
+      - /<command> addReplace - Adds next clicked block to 'CanReplace' list.
+      - /<command> addAccum - Adds next clicked block to 'CanAccumulateOn' list.
+      - /<command> addFall - Adds next clicked block to 'CanFallThrough' list.
 permissions:
   snowcontrol.reload:
+    description: Force the plugin to reload the config file.
+    default: op
+  snowcontrol.addReplace:
+    description: Force the plugin to reload the config file.
+    default: op
+  snowcontrol.addAccum:
+    description: Force the plugin to reload the config file.
+    default: op
+  snowcontrol.addFall:
     description: Force the plugin to reload the config file.
     default: op

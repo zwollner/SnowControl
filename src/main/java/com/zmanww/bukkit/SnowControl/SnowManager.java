@@ -22,11 +22,17 @@ public class SnowManager {
 		if (blkData <= 6) {
 			if (shouldIncrease(block, blkData)
 					&& getSnowDepth(block) <= Config.getInstance().getMaxAccumulation(getTypeUnderSnow(block))) {
+
+				if (block.getRelative(BlockFace.DOWN).getType() == Material.SOIL) {
+					block.getRelative(BlockFace.DOWN).setType(Material.DIRT);
+				}
+
 				if (block.getType() == Material.SNOW && blkData < 6) {
 					block.setData((byte) (blkData + 1));
 				} else if (block.getType() == Material.SNOW && blkData == 6) {
 					block.setType(Material.SNOW_BLOCK);
 				} else if (Config.getInstance().canReplace.contains(block.getType())) {
+					block.setType(Material.AIR);// for some reason this helps
 					block.setType(Material.SNOW);
 				}
 			}

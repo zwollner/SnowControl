@@ -2,18 +2,16 @@
 #  SnowControl configuration
 #  Last updated with version: ${project.version}
 #
-#####
-#
-#  Settings for Snow Fall
 #  blocks can be listed as ID's or their names, 
 #  but names must be exactly as seen here: 
 #  http://jd.bukkit.org/apidocs/org/bukkit/Material.html
 ###
+
 SnowFall: #this is only in biomes where snow falls naturally
   CheckEvery: 10 #number in seconds
   AccumulationEnabled: true
   AccumulationChance: 1 #percent 0-100
-  MaxAccumulationDefault: 8 # number of 'layers' of snow
+  MaxAccumulationDefault: 7 # number of 'layers' of snow
   MaxAccumulationOverride: # Must match marerial name exactly
     LEAVES: 3
   MeltingEnabled: true

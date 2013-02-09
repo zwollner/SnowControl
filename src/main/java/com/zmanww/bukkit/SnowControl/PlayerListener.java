@@ -52,7 +52,26 @@ public class PlayerListener implements Listener {
 
 	@EventHandler()
 	public void onBlockDamage(BlockDamageEvent event) {
-		if (Config.getInstance().debugEnabled()) {
+		if (SnowControl.pendingCommand.containsKey(event.getPlayer())) {
+			if (SnowControl.pendingCommand.get(event.getPlayer()).equals(SnowControl.COMMAND_ACCUMULATE)) {
+				event.getPlayer().sendMessage(
+						"Adding " + event.getBlock().getType().name() + " to CanAccumulateOn list.");
+				Config.getInstance().addAccumulate(event.getBlock().getType());
+				SnowControl.pendingCommand.remove(event.getPlayer());
+				event.setCancelled(true);
+			} else if (SnowControl.pendingCommand.get(event.getPlayer()).equals(SnowControl.COMMAND_FALLTHROUGH)) {
+				event.getPlayer().sendMessage(
+						"Adding " + event.getBlock().getType().name() + " to CanFallThrough list.");
+				Config.getInstance().addFallThrough(event.getBlock().getType());
+				SnowControl.pendingCommand.remove(event.getPlayer());
+				event.setCancelled(true);
+			} else if (SnowControl.pendingCommand.get(event.getPlayer()).equals(SnowControl.COMMAND_REPLACE)) {
+				event.getPlayer().sendMessage("Adding " + event.getBlock().getType().name() + " to CanReplace list.");
+				Config.getInstance().addReplaceable(event.getBlock().getType());
+				SnowControl.pendingCommand.remove(event.getPlayer());
+				event.setCancelled(true);
+			}
+		} else if (Config.getInstance().debugEnabled()) {
 			Block block = event.getBlock();
 			if (event.getItemInHand().getType() == Material.STICK) {
 				int y = event.getBlock().getWorld().getHighestBlockYAt(block.getX(), block.getZ());

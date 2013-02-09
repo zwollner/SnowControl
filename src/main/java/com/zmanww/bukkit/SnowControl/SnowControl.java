@@ -1,8 +1,11 @@
 package com.zmanww.bukkit.SnowControl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -12,6 +15,12 @@ public class SnowControl extends JavaPlugin implements Listener {
 
 	private final PlayerListener playerListener = new PlayerListener(this);
 	private final WorldListener worldListener = new WorldListener(this);
+
+	public static final String COMMAND_REPLACE = "REPLACE";
+	public static final String COMMAND_FALLTHROUGH = "FALLTHROUGH";
+	public static final String COMMAND_ACCUMULATE = "ACCUMULATE";
+
+	public static Map<Player, String> pendingCommand = new HashMap<Player, String>();
 
 	public static int snowMonitorTaskID;
 
@@ -38,6 +47,7 @@ public class SnowControl extends JavaPlugin implements Listener {
 	}
 
 	public void onDisable() {
+		plugin.getServer().getScheduler().cancelTask(snowMonitorTaskID);
 		this.saveConfig();
 	}
 

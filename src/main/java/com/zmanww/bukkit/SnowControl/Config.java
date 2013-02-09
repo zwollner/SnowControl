@@ -61,6 +61,43 @@ public class Config {
 
 	}
 
+	public void addReplaceable(Material mat) {
+		if (!canReplace.contains(mat)) {
+			canReplace.add(mat);
+
+			plugin.getConfig().set("SnowFall.CanReplace", MaterialToString(canReplace));
+			plugin.saveConfig();
+		}
+	}
+
+	public void addAccumulate(Material mat) {
+		if (!canAccumulateOn.contains(mat)) {
+			canAccumulateOn.add(mat);
+
+			plugin.getConfig().set("SnowFall.CanAccumulateOn", MaterialToString(canAccumulateOn));
+			plugin.saveConfig();
+		}
+	}
+
+	public void addFallThrough(Material mat) {
+		if (!canFallThrough.contains(mat)) {
+			canFallThrough.add(mat);
+
+			plugin.getConfig().set("SnowFall.CanFallThrough", MaterialToString(canFallThrough));
+			plugin.saveConfig();
+		}
+	}
+
+	private List<String> MaterialToString(List<Material> tempList) {
+		List<String> retVal = new ArrayList<String>();
+		if (tempList != null) {
+			for (Material mat : tempList) {
+				retVal.add(mat.name());
+			}
+		}
+		return retVal;
+	}
+
 	private List<Material> stringToMaterial(List<String> tempList) {
 		List<Material> retVal = new ArrayList<Material>();
 		if (tempList != null) {
