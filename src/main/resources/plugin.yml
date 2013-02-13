@@ -17,11 +17,11 @@ permissions:
     description: Force the plugin to reload the config file.
     default: op
   snowcontrol.addReplace:
-    description: Force the plugin to reload the config file.
+    description: Adds next clicked block to 'CanReplace' list.
     default: op
   snowcontrol.addAccum:
-    description: Force the plugin to reload the config file.
+    description: Adds next clicked block to 'CanAccumulateOn' list.
     default: op
   snowcontrol.addFall:
-    description: Force the plugin to reload the config file.
+    description: Adds next clicked block to 'CanFallThrough' list.
     default: op

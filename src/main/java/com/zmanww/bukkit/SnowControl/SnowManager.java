@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -157,7 +158,8 @@ public class SnowManager {
 	}
 
 	public static Block getHighestNonAirBlock(Block block) {
-		Block currentBlock = block;
+		World world = block.getWorld();
+		Block currentBlock = world.getBlockAt(block.getX(), world.getMaxHeight() - 1, block.getZ());
 		while (currentBlock.getType() == Material.AIR) {
 			currentBlock = currentBlock.getRelative(BlockFace.DOWN);
 		}
