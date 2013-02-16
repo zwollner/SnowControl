@@ -35,17 +35,34 @@ public class Config {
 	public void reload() {
 		plugin.reloadConfig(); // Force reload
 		instance = null;// Force all objects to reload.
+
+		// restart the Monitor
+		plugin.getServer().getScheduler().cancelTask(SnowControl.snowMonitorTaskID);
+		plugin.getLogger()
+				.info("Restarting the Monitor in 5sec... repeating every " + Config.getInstance().getSnowFallDelay()
+						+ "sec.");
+		SnowControl.snowMonitorTaskID = plugin
+				.getServer()
+				.getScheduler()
+				.scheduleSyncRepeatingTask(plugin, new SnowMonitor(plugin), 5L * 20L,
+						Config.getInstance().getSnowFallDelay() * 20L);
 	}
 
 	private void loadKeys() {
 		canFallThrough = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanFallThrough"));
-		canFallThrough.add(Material.AIR);
+		if (!canFallThrough.contains(Material.AIR)) {
+			canFallThrough.add(Material.AIR);
+		}
 
 		canReplace = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanReplace"));
-		canReplace.add(Material.AIR);
+		if (!canReplace.contains(Material.AIR)) {
+			canReplace.add(Material.AIR);
+		}
 
 		canAccumulateOn = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanAccumulateOn"));
-		canAccumulateOn.add(Material.SNOW_BLOCK);
+		if (!canAccumulateOn.contains(Material.SNOW_BLOCK)) {
+			canAccumulateOn.add(Material.SNOW_BLOCK);
+		}
 
 		if (plugin.getConfig().isSet(("SnowFall.EnabledWorlds"))) {
 			enabledWorlds = plugin.getConfig().getStringList("SnowFall.EnabledWorlds");
@@ -92,7 +109,9 @@ public class Config {
 		List<String> retVal = new ArrayList<String>();
 		if (tempList != null) {
 			for (Material mat : tempList) {
-				retVal.add(mat.name());
+				if (mat != null && StringUtils.isNotEmpty(mat.name())) {
+					retVal.add(mat.name());
+				}
 			}
 		}
 		return retVal;

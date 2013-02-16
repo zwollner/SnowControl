@@ -32,10 +32,10 @@ public class SnowControl extends JavaPlugin implements Listener {
 		getCommand("snowcontrol").setExecutor(new CommandManager());
 
 		this.getLogger().info(
-				"Scheduling Monitor to start in 10sec... repeating every " + Config.getInstance().getSnowFallDelay()
+				"Scheduling Monitor to start in 20sec... repeating every " + Config.getInstance().getSnowFallDelay()
 						+ "sec.");
 		snowMonitorTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new SnowMonitor(plugin),
-				10L * 20L, Config.getInstance().getSnowFallDelay() * 20L);
+				20L * 20L, Config.getInstance().getSnowFallDelay() * 20L);
 
 		try {
 			Metrics metrics = new Metrics(this);
