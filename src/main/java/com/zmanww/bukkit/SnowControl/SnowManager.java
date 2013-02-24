@@ -161,6 +161,10 @@ public class SnowManager {
 		World world = block.getWorld();
 		Block currentBlock = world.getBlockAt(block.getX(), world.getMaxHeight() - 1, block.getZ());
 		while (currentBlock.getType() == Material.AIR) {
+			if (currentBlock.getY() < 2){
+				//For sky levels or other areas where there are no Non-Air blocks
+				return currentBlock;
+			}
 			currentBlock = currentBlock.getRelative(BlockFace.DOWN);
 		}
 		return currentBlock;

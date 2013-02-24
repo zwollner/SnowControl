@@ -37,7 +37,7 @@ public class SnowMonitor implements Runnable {
 							for (int z = 0; z < 16; z++) {
 								int y = chunkSnap.getHighestBlockYAt(x, z);
 								Block block = SnowManager.getHighestNonAirBlock(chunk.getBlock(x, y, z));
-								if (SnowManager.canSnowInBiome(block.getBiome())) {
+								if (block.getType() != Material.AIR && SnowManager.canSnowInBiome(block.getBiome())) {
 									if (world.hasStorm()) {
 										if (Config.getInstance().isAccumulationEnabled()) {
 											if (rnd.nextFloat() <= Config.getInstance().getChanceToAccumulate()) {

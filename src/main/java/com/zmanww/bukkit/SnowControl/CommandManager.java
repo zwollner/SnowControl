@@ -29,20 +29,20 @@ public class CommandManager implements CommandExecutor {
 				if (sender instanceof Player) {// If run by player check permissions
 					if (sender.hasPermission("snowcontrol.reload")) {
 						Config.getInstance().reload();
-						sender.sendMessage("SnowControl config has been reloaded");
+						sender.sendMessage(MessageUtil.RELOAD_MESSAGE);
 					} else {
 						sender.sendMessage(NO_PERMISSION_MSG);
 					}
 				} else {
 					Config.getInstance().reload();
-					sender.sendMessage("SnowControl config has been reloaded");
+					sender.sendMessage(MessageUtil.RELOAD_MESSAGE);
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("addReplace")) {
 				if (sender instanceof Player) {
 					if (sender.hasPermission("snowcontrol.addReplace")) {
 						SnowControl.pendingCommand.put((Player) sender, SnowControl.COMMAND_REPLACE);
-						sender.sendMessage("Please hit the block to add to the CanReplace List");
+						sender.sendMessage(MessageUtil.getToAddToMsg(Config.CONFIG_CAN_REPLACE));
 					} else {
 						sender.sendMessage(NO_PERMISSION_MSG);
 					}
@@ -52,7 +52,7 @@ public class CommandManager implements CommandExecutor {
 				if (sender instanceof Player) {
 					if (sender.hasPermission("snowcontrol.addAccum")) {
 						SnowControl.pendingCommand.put((Player) sender, SnowControl.COMMAND_ACCUMULATE);
-						sender.sendMessage("Please hit the block to add to the CanAccumulateOn List");
+						sender.sendMessage(MessageUtil.getToAddToMsg(Config.CONFIG_CAN_ACCUMULATE_ON));
 					} else {
 						sender.sendMessage(NO_PERMISSION_MSG);
 					}
@@ -62,7 +62,7 @@ public class CommandManager implements CommandExecutor {
 				if (sender instanceof Player) {
 					if (sender.hasPermission("snowcontrol.addFall")) {
 						SnowControl.pendingCommand.put((Player) sender, SnowControl.COMMAND_FALLTHROUGH);
-						sender.sendMessage("Please hit the block to add to the CanFallThrough List");
+						sender.sendMessage(MessageUtil.getToAddToMsg(Config.CONFIG_CAN_FALL_THROUGH));
 					} else {
 						sender.sendMessage(NO_PERMISSION_MSG);
 					}

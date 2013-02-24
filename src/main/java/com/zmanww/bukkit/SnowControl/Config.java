@@ -17,6 +17,11 @@ public class Config {
 	public List<Material> canAccumulateOn = new ArrayList<Material>();
 	public List<String> enabledWorlds = new ArrayList<String>();
 
+	private static final String CONFIG_SNOWFALL = "SnowFall.";
+	public static final String CONFIG_CAN_FALL_THROUGH = "CanFallThrough";
+	public static final String CONFIG_CAN_REPLACE = "CanReplace";
+	public static final String CONFIG_CAN_ACCUMULATE_ON = "CanAccumulateOn";
+
 	private Config() {
 		if (!new File(plugin.getDataFolder(), "config.yml").exists()) {
 			plugin.saveDefaultConfig();
@@ -49,22 +54,22 @@ public class Config {
 	}
 
 	private void loadKeys() {
-		canFallThrough = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanFallThrough"));
+		canFallThrough = stringToMaterial(plugin.getConfig().getStringList(CONFIG_SNOWFALL + CONFIG_CAN_FALL_THROUGH));
 		if (!canFallThrough.contains(Material.AIR)) {
 			canFallThrough.add(Material.AIR);
 		}
 
-		canReplace = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanReplace"));
+		canReplace = stringToMaterial(plugin.getConfig().getStringList(CONFIG_SNOWFALL + CONFIG_CAN_REPLACE));
 		if (!canReplace.contains(Material.AIR)) {
 			canReplace.add(Material.AIR);
 		}
 
-		canAccumulateOn = stringToMaterial(plugin.getConfig().getStringList("SnowFall.CanAccumulateOn"));
+		canAccumulateOn = stringToMaterial(plugin.getConfig().getStringList(CONFIG_SNOWFALL + CONFIG_CAN_ACCUMULATE_ON));
 		if (!canAccumulateOn.contains(Material.SNOW_BLOCK)) {
 			canAccumulateOn.add(Material.SNOW_BLOCK);
 		}
 
-		if (plugin.getConfig().isSet(("SnowFall.EnabledWorlds"))) {
+		if (plugin.getConfig().isSet("SnowFall.EnabledWorlds")) {
 			enabledWorlds = plugin.getConfig().getStringList("SnowFall.EnabledWorlds");
 		} else {
 			for (World world : plugin.getServer().getWorlds()) {
@@ -82,7 +87,7 @@ public class Config {
 		if (!canReplace.contains(mat)) {
 			canReplace.add(mat);
 
-			plugin.getConfig().set("SnowFall.CanReplace", MaterialToString(canReplace));
+			plugin.getConfig().set(CONFIG_SNOWFALL + CONFIG_CAN_REPLACE, MaterialToString(canReplace));
 			plugin.saveConfig();
 		}
 	}
@@ -91,7 +96,7 @@ public class Config {
 		if (!canAccumulateOn.contains(mat)) {
 			canAccumulateOn.add(mat);
 
-			plugin.getConfig().set("SnowFall.CanAccumulateOn", MaterialToString(canAccumulateOn));
+			plugin.getConfig().set(CONFIG_SNOWFALL + CONFIG_CAN_ACCUMULATE_ON, MaterialToString(canAccumulateOn));
 			plugin.saveConfig();
 		}
 	}
@@ -100,7 +105,7 @@ public class Config {
 		if (!canFallThrough.contains(mat)) {
 			canFallThrough.add(mat);
 
-			plugin.getConfig().set("SnowFall.CanFallThrough", MaterialToString(canFallThrough));
+			plugin.getConfig().set(CONFIG_SNOWFALL + CONFIG_CAN_FALL_THROUGH, MaterialToString(canFallThrough));
 			plugin.saveConfig();
 		}
 	}
@@ -170,7 +175,7 @@ public class Config {
 
 	public byte getMaxAccumulation(Material mat) {
 		int retVal = plugin.getConfig().getInt("SnowFall.MaxAccumulationDefault", 7);
-		if (mat != null) {
+		if (mat != null && plugin.getConfig().isSet("SnowFall.MaxAccumulationOverride." + mat.toString())) {
 			retVal = plugin.getConfig().getInt("SnowFall.MaxAccumulationOverride." + mat.toString(), retVal);
 		}
 		if (retVal < 0) {

@@ -26,7 +26,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler()
 	public void blockBreak(BlockBreakEvent event) {
-		final Block block = event.getBlock();
+		Block block = event.getBlock();
 		if (block.getType() == Material.ICE) {
 			if (event.getPlayer().getItemInHand().getType() == Material.STONE_PICKAXE
 					|| event.getPlayer().getItemInHand().getType() == Material.WOOD_PICKAXE
@@ -37,16 +37,30 @@ public class PlayerListener implements Listener {
 			}
 		}
 		final Location loc = event.getBlock().getLocation();
-		if (block.getRelative(BlockFace.UP).getType() == Material.SNOW) {
+		byte under = -1;
+		if (block.getRelative(BlockFace.UP).getType() == Material.SNOW
+				|| block.getRelative(BlockFace.UP).getType() == Material.SNOW_BLOCK) {
 			/*
 			 * If block above broken is snow, then remove the next replaceable block under it so that the falling snow
 			 * lands properly.
 			 */
 			SnowManager.removeReplaceableUnder(block);
-			final byte above = block.getRelative(BlockFace.UP).getData();// get level of snow about to fall
-			final byte under = SnowManager.getSnowLevelUnder(block);// get level of snow where it will land
-			final byte newUnder = (byte) (above + under + 1 > 7 ? 7 : above + under + 1);
-			loc.getWorld().spawnFallingBlock(loc, Material.SNOW, newUnder);
+
+			under = SnowManager.getSnowLevelUnder(block);// get level of snow where it will land
+		}
+		while (block.getRelative(BlockFace.UP).getType() == Material.SNOW
+				|| block.getRelative(BlockFace.UP).getType() == Material.SNOW_BLOCK) {
+			block = block.getRelative(BlockFace.UP);
+
+			if (block.getType() == Material.SNOW_BLOCK) {
+				block.setType(Material.AIR);
+				loc.getWorld().spawnFallingBlock(loc, Material.SNOW_BLOCK, (byte) 0);
+			} else {
+				final byte above = block.getData();// get level of snow about to fall
+				final byte newUnder = (byte) (above + under + 1 > 7 ? 7 : above + under + 1);
+				loc.getWorld().spawnFallingBlock(loc, Material.SNOW, newUnder);
+			}
+
 		}
 	}
 
@@ -54,20 +68,21 @@ public class PlayerListener implements Listener {
 	public void onBlockDamage(BlockDamageEvent event) {
 		if (SnowControl.pendingCommand.containsKey(event.getPlayer())) {
 			if (SnowControl.pendingCommand.get(event.getPlayer()).equals(SnowControl.COMMAND_ACCUMULATE)) {
-				event.getPlayer().sendMessage(
-						"Adding " + event.getBlock().getType().name() + " to CanAccumulateOn list.");
 				Config.getInstance().addAccumulate(event.getBlock().getType());
+				event.getPlayer().sendMessage(
+						MessageUtil.getAddedToList(event.getBlock().getType().name(), Config.CONFIG_CAN_ACCUMULATE_ON));
 				SnowControl.pendingCommand.remove(event.getPlayer());
 				event.setCancelled(true);
 			} else if (SnowControl.pendingCommand.get(event.getPlayer()).equals(SnowControl.COMMAND_FALLTHROUGH)) {
-				event.getPlayer().sendMessage(
-						"Adding " + event.getBlock().getType().name() + " to CanFallThrough list.");
-				Config.getInstance().addFallThrough(event.getBlock().getType());
 				SnowControl.pendingCommand.remove(event.getPlayer());
+				event.getPlayer().sendMessage(
+						MessageUtil.getAddedToList(event.getBlock().getType().name(), Config.CONFIG_CAN_FALL_THROUGH));
+				Config.getInstance().addFallThrough(event.getBlock().getType());
 				event.setCancelled(true);
 			} else if (SnowControl.pendingCommand.get(event.getPlayer()).equals(SnowControl.COMMAND_REPLACE)) {
-				event.getPlayer().sendMessage("Adding " + event.getBlock().getType().name() + " to CanReplace list.");
 				Config.getInstance().addReplaceable(event.getBlock().getType());
+				event.getPlayer().sendMessage(
+						MessageUtil.getAddedToList(event.getBlock().getType().name(), Config.CONFIG_CAN_REPLACE));
 				SnowControl.pendingCommand.remove(event.getPlayer());
 				event.setCancelled(true);
 			}
