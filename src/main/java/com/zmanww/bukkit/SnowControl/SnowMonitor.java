@@ -22,7 +22,6 @@ public class SnowMonitor implements Runnable {
 		this.plugin = plugin;
 	}
 
-	@Override
 	public void run() {
 		if (!plugin.getServer().getScheduler().isCurrentlyRunning(SnowControl.snowMonitorTaskID)) {
 			plugin.debugLog("Running Monitor...");

@@ -22,7 +22,6 @@ public class CommandManager implements CommandExecutor {
 	// plugin = instance;
 	// }
 
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("snowcontrol") && args.length > 0) {
 			if (args[0].equalsIgnoreCase("reload")) {
