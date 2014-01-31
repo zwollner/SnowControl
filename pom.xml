@@ -4,7 +4,7 @@
 
 	<groupId>com.zmanww</groupId>
 	<artifactId>SnowControl</artifactId>
-	<version>1.0-beta9.7</version>
+	<version>1.0-beta9.8</version>
 	<packaging>jar</packaging>
 
 	<name>SnowControl</name>
