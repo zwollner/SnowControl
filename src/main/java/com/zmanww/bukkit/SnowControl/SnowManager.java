@@ -21,8 +21,8 @@ public class SnowManager {
 	public static void increaseSnowLevel(Block block) {
 		byte blkData = (block.getType() == Material.SNOW ? block.getData() : 0);
 		if (blkData <= 6) {
-			if (shouldIncrease(block, blkData)
-					&& getSnowDepth(block) <= Config.getInstance().getMaxAccumulation(getTypeUnderSnow(block))) {
+			if (shouldIncrease(block, blkData) && getSnowDepth(block) <= Config.getInstance().getMaxAccumulation(
+					getTypeUnderSnow(block))) {
 
 				if (block.getRelative(BlockFace.DOWN).getType() == Material.SOIL) {
 					block.getRelative(BlockFace.DOWN).setType(Material.DIRT);
@@ -66,12 +66,16 @@ public class SnowManager {
 	}
 
 	public static boolean canSnowInBiome(Biome biome) {
-		boolean retVal = false;
-		if (biome == Biome.ICE_MOUNTAINS || biome == Biome.ICE_PLAINS || biome == Biome.TAIGA
-				|| biome == Biome.TAIGA_HILLS || biome == Biome.FROZEN_OCEAN || biome == Biome.FROZEN_RIVER) {
-			retVal = true;
+		if (biome.name().toUpperCase().contains("ICE_")) {
+			return true;
 		}
-		return retVal;
+		if (biome.name().toUpperCase().contains("COLD_")) {
+			return true;
+		}
+		if (biome.name().toUpperCase().contains("FROZEN_")) {
+			return true;
+		}
+		return false;
 	}
 
 	public static void decreaseSnowLevel(Location loc) {
@@ -84,8 +88,7 @@ public class SnowManager {
 						block.setType(Material.SNOW);
 					}
 					block.setData((byte) (blkData - 1));
-				} else if ((Config.getInstance().meltDownCompletely())
-						|| (block.getRelative(BlockFace.DOWN).getType() == Material.SNOW)
+				} else if ((Config.getInstance().meltDownCompletely()) || (block.getRelative(BlockFace.DOWN).getType() == Material.SNOW)
 						|| (block.getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK)) {
 					block.setType(Material.AIR);
 				}
@@ -161,8 +164,8 @@ public class SnowManager {
 		World world = block.getWorld();
 		Block currentBlock = world.getBlockAt(block.getX(), world.getMaxHeight() - 1, block.getZ());
 		while (currentBlock.getType() == Material.AIR) {
-			if (currentBlock.getY() < 2){
-				//For sky levels or other areas where there are no Non-Air blocks
+			if (currentBlock.getY() < 2) {
+				// For sky levels or other areas where there are no Non-Air blocks
 				return currentBlock;
 			}
 			currentBlock = currentBlock.getRelative(BlockFace.DOWN);
@@ -205,8 +208,8 @@ public class SnowManager {
 			}
 
 			if ((!Config.getInstance().canFallThrough.contains(tempBlk.getType()) && tempBlk.getType() != Material.SNOW && tempBlk
-					.getType() != Material.SNOW_BLOCK)
-					|| !(new Random(System.nanoTime()).nextFloat() <= Config.getInstance().getChanceToFallThrough())) {
+					.getType() != Material.SNOW_BLOCK) || !(new Random(System.nanoTime()).nextFloat() <= Config
+					.getInstance().getChanceToFallThrough())) {
 				// Can't fall through block, and it's not snow, OR odds say no
 				done = true;
 			}
