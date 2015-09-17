@@ -17,7 +17,11 @@ Having said this, my real server where this is running is a Dual core Xeon @ 3.0
 ### Installation
 Download jar and place it in your plugins folder. (http://wiki.bukkit.org/Installing_Plugins)
 
-*Until I find a build server you'll have to build this yourself using maven*
+[![Build Status](https://buildhive.cloudbees.com/job/zwollner/job/SnowControl/badge/icon)](https://buildhive.cloudbees.com/job/zwollner/job/SnowControl/) There is always a development version <a href="https://buildhive.cloudbees.com/job/zwollner/job/SnowControl/lastSuccessfulBuild/com.zmanww$SnowControl/">HERE</a>. Please keep in mind that this build may not be working 100%, or even tested, use at your own risk.
+
+
+
+
 
 ### Commands/Permissions
 ```YAML
@@ -123,4 +127,6 @@ SnowFall: #this is only in biomes where snow falls naturally
 *This plugin utilizes Hidendra's plugin metrics system, which means some anonymous information will be collected and sent to mcstats.org.
 This allows me to track how many servers are actually running the plugin, and the larger user base I have the more likely I am to add features.
 If you wish to opt out of this service, it can be done by editing plugins/Plugin Metrics/config.yml*
+
+<img src="http://i.mcstats.org/SnowControl/Global+Statistics.borderless.png">
 ##
