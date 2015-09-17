@@ -1,1 +1,8 @@
 language: java
+deploy:
+  provider: releases
+  api_key:
+    secure: CfAbQlOuYTo8krYB8LGf+pue1Iit7Iey3eDE3TfB0485xvmzErnKdsKWAVMUzQhwT/077xYB+wM/6C9knQo37c6jaoYducvbTTuu8HGZNHMYlVqYcDgPevCkxjsfm8ECe055zBcht6YHjUgRjZcTU9d7CXIBjYC5AkjHn7AUVN4=
+  file: "/target/SnowControl.jar"
+  on:
+    repo: zwollner/SnowControl
