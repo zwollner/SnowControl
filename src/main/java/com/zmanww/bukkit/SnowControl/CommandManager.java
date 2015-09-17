@@ -1,5 +1,21 @@
-/**
- * 
+/*
+ * This file is part of SnowControl.
+ *
+ * Copyright (c) 2013 Zeb Wollner
+ * SnowControl is licensed under the GNU General Public License.
+ *
+ * SnowControl is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SnowControl is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.zmanww.bukkit.SnowControl;
 
@@ -25,7 +41,8 @@ public class CommandManager implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("snowcontrol") && args.length > 0) {
 			if (args[0].equalsIgnoreCase("reload")) {
-				if (sender instanceof Player) {// If run by player check permissions
+				if (sender instanceof Player) {// If run by player check
+												// permissions
 					if (sender.hasPermission("snowcontrol.reload")) {
 						Config.getInstance().reload();
 						sender.sendMessage(MessageUtil.RELOAD_MESSAGE);

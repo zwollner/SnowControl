@@ -1,14 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.zmanww</groupId>
 	<artifactId>SnowControl</artifactId>
 	<version>1.1</version>
 	<packaging>jar</packaging>
-
 	<name>SnowControl</name>
-	<url>http://maven.apache.org</url>
+	<inceptionYear>2013</inceptionYear>
+	<url>https://github.com/zwollner/SnowControl</url>
 
 	<build>
 		<finalName>SnowControl</finalName>
@@ -26,6 +25,41 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>2.11</version>
+				<configuration>
+					<header>HEADER.txt</header>
+					<properties>
+						<owner>Zeb Wollner</owner>
+					</properties>
+					<includes>
+						<include>src/main/java/**</include>
+						<include>src/test/java/**</include>
+					</includes>
+					<mapping>
+						<java>SLASHSTAR_STYLE</java>
+					</mapping>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.4.1</version>
 				<configuration>
@@ -34,7 +68,7 @@
 					<artifactSet>
 						<includes>
 							<include>com.zmanww.*</include>
-							<include>org.mcstats.*</include>
+							<include>org.mcstats.*:*</include>
 						</includes>
 					</artifactSet>
 				</configuration>
@@ -97,7 +131,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>3.8.1</version>
+				<version>LATEST</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
