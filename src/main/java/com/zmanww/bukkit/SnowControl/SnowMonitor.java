@@ -33,14 +33,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SnowMonitor extends BukkitRunnable
 {
-
 	private SnowControl plugin;
 	private Random rnd = new Random();
+	private float chanceToAccumulate, chanceToMelt;
+	private boolean accumulation, melt;
 
 	public SnowMonitor(SnowControl plugin)
 	{
 		super();
 		this.plugin = plugin;
+		chanceToAccumulate = (float) Math.sqrt(Config.getInstance().getChanceToAccumulate()) * 10f / 100f;
+		chanceToMelt = (float) Math.sqrt(Config.getInstance().getChanceToMelt()) * 10f / 100f;
+		accumulation = Config.getInstance().isAccumulationEnabled();
+		melt = Config.getInstance().isMeltingEnabled();
 	}
 
 	private Chunk[] getRandomElements(int count, Chunk... items)
@@ -113,93 +118,76 @@ public class SnowMonitor extends BukkitRunnable
 
 	public void run()
 	{
-		plugin.debugLog("Running Monitor...");
-		if(Config.getInstance().isAccumulationEnabled() || Config.getInstance().isMeltingEnabled())
+		plugin.debugLog("Running Monitor...\nChecking " + Config.getInstance().enabledWorlds.size() + " worlds");
+		for(String worldName : Config.getInstance().enabledWorlds)
 		{
-			float chanceToAccumulate = Config.getInstance().getChanceToAccumulate(), chanceToMelt = Config.getInstance().getChanceToMelt();
-			plugin.debugLog("Checking " + Config.getInstance().enabledWorlds.size() + " worlds");
-			for(String worldName : Config.getInstance().enabledWorlds)
+			World world = plugin.getServer().getWorld(worldName);
+			if(world == null)
+				continue;
+			Chunk[] chunks = world.getLoadedChunks();
+			plugin.debugLog("Checking " + chunks.length + " chunks in " + worldName);
+			if(accumulation && world.hasStorm())
 			{
-				World world = plugin.getServer().getWorld(worldName);
-				if(world == null)
-					continue;
-				Chunk[] chunks = world.getLoadedChunks();
-				plugin.debugLog("Checking " + chunks.length + " chunks in " + worldName);
-				if(Config.getInstance().isAccumulationEnabled() && world.hasStorm())
+				chunks = getRandomElements((int) Math.ceil(chunks.length * chanceToAccumulate), chunks); // I know it's not perfect, but we have to sacrifice precision for performance
+				for(Chunk chunk : chunks)
 				{
-					chunks = getRandomElements((int) Math.ceil(chunks.length * chanceToAccumulate), chunks); // I know it's not perfect, but we have to sacrifice precision for performance
-					for(Chunk chunk : chunks)
+					List<Pos2D> blocks = generateRandom2DPosList((int) Math.ceil(256 * chanceToAccumulate)); // I know it's not perfect, but we have to sacrifice precision for performance
+					for(Pos2D pos : blocks)
 					{
-						List<Pos2D> blocks = generateRandom2DPosList((int) Math.ceil(256 * chanceToAccumulate)); // I know it's not perfect, but we have to sacrifice precision for performance
-						for(Pos2D pos : blocks)
+						Block block = SnowManager.getHighestNonAirBlock(pos.getX() + chunk.getX() * 16, pos.getY() + chunk.getZ() * 16, world);
+						if(block.getType() != Material.AIR && SnowManager.canSnowInBiome(block.getBiome()))
 						{
-							Block block = SnowManager.getHighestNonAirBlock(pos.getX() + chunk.getX() * 16, pos.getY() + chunk.getZ() * 16, world);
-							if(block.getType() != Material.AIR && SnowManager.canSnowInBiome(block.getBiome()))
+							boolean canIncrease = false;
+							if(SnowManager.canSnowBeAdded(block))
 							{
-								boolean canIncrease = false;
-								if(SnowManager.canSnowBeAdded(block))
+								canIncrease = true;
+							}
+							else if(SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)))
+							{
+								block = block.getRelative(BlockFace.UP);
+								canIncrease = true;
+							}
+							if(canIncrease)
+							{
+								SnowManager.increaseSnowLevel(block);
+								for(Block blk : SnowManager.getBlocksToIncreaseUnder(block))
 								{
-									canIncrease = true;
-								}
-								else if(SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)))
-								{
-									block = block.getRelative(BlockFace.UP);
-									canIncrease = true;
-								}
-								if(canIncrease)
-								{
-									SnowManager.increaseSnowLevel(block);
-									for(Block blk : SnowManager.getBlocksToIncreaseUnder(block))
-									{
-										SnowManager.increaseSnowLevel(blk);
-									}
+									SnowManager.increaseSnowLevel(blk);
 								}
 							}
 						}
-					}// Chunk Loop
+					}
 				}
-				else if(Config.getInstance().isMeltingEnabled() && !world.hasStorm())
+			}
+			else if(melt && !world.hasStorm())
+			{
+				chunks = getRandomElements((int) Math.ceil(chunks.length * chanceToMelt), chunks); // I know it's not perfect, but we have to sacrifice precision for performance
+				for(final org.bukkit.Chunk chunk : chunks)
 				{
-					chunks = getRandomElements((int) Math.ceil(chunks.length * chanceToMelt), chunks); // I know it's not perfect, but we have to sacrifice precision for performance
-					for(final org.bukkit.Chunk chunk : chunks)
+					List<Pos2D> blocks = generateRandom2DPosList((int) Math.ceil(256 * chanceToMelt)); // I know it's not perfect, but we have to sacrifice precision for performance
+					for(Pos2D pos : blocks)
 					{
-						List<Pos2D> blocks = generateRandom2DPosList((int) Math.ceil(256 * chanceToMelt)); // I know it's not perfect, but we have to sacrifice precision for performance
-						for(Pos2D pos : blocks)
+						Block block = SnowManager.getHighestNonAirBlock(pos.getX() + chunk.getX() * 16, pos.getY() + chunk.getZ() * 16, world);
+						if(block.getType() != Material.AIR && SnowManager.canSnowInBiome(block.getBiome()))
 						{
-							Block block = SnowManager.getHighestNonAirBlock(pos.getX() + chunk.getX() * 16, pos.getY() + chunk.getZ() * 16, world);
-							if(block.getType() != Material.AIR && SnowManager.canSnowInBiome(block.getBiome()))
+							if(block.getType() != Material.AIR && (Config.getInstance().canFallThrough.contains(block.getType()) || (block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK)))
 							{
-								if(block.getType() != Material.AIR && (Config.getInstance().canFallThrough.contains(block.getType()) || (block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK)))
+								List<Block> snowBlocks = SnowManager.getSnowBlocksUnder(block); // If the block is something snow can fall through, then there could be snow
+								if((block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK))
 								{
-									// plugin.debugLog("Melting");
-										/*
-										 * If the block is something snow can fall through, then there could be snow
-										 * under it
-										 */
-									List<Block> snowBlocks = SnowManager.getSnowBlocksUnder(block);
-									if((block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK))
+									snowBlocks.add(block);
+								}
+								for(Block blk : snowBlocks)
+								{
+									if(blk.getType() == Material.SNOW_BLOCK) // Stupid hack because bukkit does not return light level for SNOW_BLOCKS
 									{
-										snowBlocks.add(block);
+										blk.setType(Material.SNOW);
+										//noinspection deprecation
+										blk.setData((byte) 7);
 									}
-									for(Block blk : snowBlocks)
+									if(blk.getType() == Material.SNOW && blk.getLightFromSky() >= Config.getInstance().getMinLightLevel())
 									{
-											/*
-											 * Stupid hack because bukkit does not return light level for
-											 * SNOW_BLOCKS
-											 */
-										if(blk.getType() == Material.SNOW_BLOCK)
-										{
-											blk.setType(Material.SNOW);
-											blk.setData((byte) 7);
-										}
-										if(blk.getType() == Material.SNOW && blk.getLightFromSky() >= Config.getInstance().getMinLightLevel())
-										{
-											// Melt it down
-											if(rnd.nextFloat() <= Config.getInstance().getChanceToMelt())
-											{
-												SnowManager.decreaseSnowLevel(new Location(world, blk.getX(), blk.getY(), blk.getZ()));
-											}
-										}
+										SnowManager.decreaseSnowLevel(new Location(world, blk.getX(), blk.getY(), blk.getZ())); // Melt it down
 									}
 								}
 							}

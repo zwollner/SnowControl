@@ -170,11 +170,11 @@ public class Config {
 	}
 
 	public float getChanceToAccumulate() {
-		return (float) (plugin.getConfig().getDouble("SnowFall.AccumulationChance", 10) / 100);
+		return (float) (plugin.getConfig().getDouble("SnowFall.AccumulationChance", 10));
 	}
 
 	public float getChanceToMelt() {
-		return (float) (plugin.getConfig().getDouble("SnowFall.MeltingChance", 10) / 100);
+		return (float) (plugin.getConfig().getDouble("SnowFall.MeltingChance", 10));
 	}
 
 	public float getChanceToFallThrough() {

@@ -69,9 +69,12 @@ public class SnowControl extends JavaPlugin implements Listener {
 		{
 			snowMonitor.cancel();
 		}
-		snowMonitor = new SnowMonitor(this);
-		this.getLogger().info("Scheduling Monitor to start in 20sec... repeating every " + Config.getInstance().getSnowFallDelay() + "sec.");
-		snowMonitor.runTaskTimer(plugin, 400L, Config.getInstance().getSnowFallDelay() * 20L);
+		if(Config.getInstance().isAccumulationEnabled() || Config.getInstance().isMeltingEnabled())
+		{
+			snowMonitor = new SnowMonitor(this);
+			this.getLogger().info("Scheduling Monitor to start in 20sec... repeating every " + Config.getInstance().getSnowFallDelay() + "sec.");
+			snowMonitor.runTaskTimer(plugin, 400L, Config.getInstance().getSnowFallDelay() * 20L);
+		}
 	}
 
 	public void onDisable() {
