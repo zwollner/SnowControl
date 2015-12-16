@@ -108,9 +108,7 @@ public class PlayerListener implements Listener {
 		} else if (Config.getInstance().debugEnabled()) {
 			Block block = event.getBlock();
 			if (event.getItemInHand().getType() == Material.STICK) {
-				int y = event.getBlock().getWorld().getHighestBlockYAt(block.getX(), block.getZ());
-				Block highBlk = SnowManager.getHighestNonAirBlock(block.getWorld().getBlockAt(block.getX(), y,
-						block.getZ()));
+				Block highBlk = SnowManager.getHighestNonAirBlock(block.getX(), block.getZ(), block.getWorld());
 				event.getPlayer().sendMessage("Highest: " + highBlk.getType().name());
 				event.getPlayer().sendMessage(
 						event.getBlock().getType().name() + ":" + event.getBlock().getData() + " Light="

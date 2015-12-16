@@ -39,34 +39,46 @@ public class SnowControl extends JavaPlugin implements Listener {
 	public static final String COMMAND_FALLTHROUGH = "FALLTHROUGH";
 	public static final String COMMAND_ACCUMULATE = "ACCUMULATE";
 
-	public static Map<Player, String> pendingCommand = new HashMap<Player, String>();
+	public static Map<Player, String> pendingCommand = new HashMap<>();
 
-	public static int snowMonitorTaskID;
+	private SnowMonitor snowMonitor;
 
 	public void onEnable() {
 		plugin = this;
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(worldListener, this);
-
 		getCommand("snowcontrol").setExecutor(new CommandManager());
-
-		this.getLogger().info(
-				"Scheduling Monitor to start in 20sec... repeating every " + Config.getInstance().getSnowFallDelay()
-						+ "sec.");
-		snowMonitorTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new SnowMonitor(plugin),
-				20L * 20L, Config.getInstance().getSnowFallDelay() * 20L);
-
-		try {
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-		} catch (IOException e) {
-			// Failed to submit the stats :-(
+		startScheduler();
+		if(Config.getInstance().isMeltingEnabled())
+		{
+			try
+			{
+				Metrics metrics = new Metrics(this);
+				metrics.start();
+			}
+			catch(IOException e)
+			{
+				// Failed to submit the stats :-(
+			}
 		}
+	}
 
+	public void startScheduler()
+	{
+		if(snowMonitor != null)
+		{
+			snowMonitor.cancel();
+		}
+		else
+		{
+			snowMonitor = new SnowMonitor(this);
+		}
+		this.getLogger().info("Scheduling Monitor to start in 20sec... repeating every " + Config.getInstance().getSnowFallDelay() + "sec.");
+		snowMonitor.runTaskTimer(plugin, 400L, Config.getInstance().getSnowFallDelay() * 20L);
 	}
 
 	public void onDisable() {
-		plugin.getServer().getScheduler().cancelTask(snowMonitorTaskID);
+		if(snowMonitor != null) snowMonitor.cancel();
 		this.saveConfig();
 	}
 
