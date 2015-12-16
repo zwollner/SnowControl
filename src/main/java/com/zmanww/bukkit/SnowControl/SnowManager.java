@@ -179,14 +179,22 @@ public class SnowManager {
 		return -1;
 	}
 
-	public static Block getHighestNonAirBlock(Block block) {
-		World world = block.getWorld();
-		Block currentBlock = world.getBlockAt(block.getX(), world.getMaxHeight() - 1, block.getZ());
-		while (currentBlock.getType() == Material.AIR) {
-			if (currentBlock.getY() < 2) {
-				// For sky levels or other areas where there are no Non-Air blocks
-				return currentBlock;
-			}
+	public static Block getHighestNonAirBlock(Block currentBlock)
+	{
+		while (currentBlock.getType() == Material.AIR)
+		{
+			if (currentBlock.getY() < 2) return currentBlock; // For sky levels or other areas where there are no Non-Air blocks
+			currentBlock = currentBlock.getRelative(BlockFace.DOWN);
+		}
+		return currentBlock;
+	}
+
+	public static Block getHighestNonAirBlock(int x, int z, World world)
+	{
+		Block currentBlock = world.getBlockAt(x, world.getMaxHeight() - 1, z);
+		while (currentBlock.getType() == Material.AIR)
+		{
+			if (currentBlock.getY() < 2) return currentBlock; // For sky levels or other areas where there are no Non-Air blocks
 			currentBlock = currentBlock.getRelative(BlockFace.DOWN);
 		}
 		return currentBlock;

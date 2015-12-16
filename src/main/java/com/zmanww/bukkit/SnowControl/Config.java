@@ -61,15 +61,7 @@ public class Config {
 		instance = null;// Force all objects to reload.
 
 		// restart the Monitor
-		plugin.getServer().getScheduler().cancelTask(SnowControl.snowMonitorTaskID);
-		plugin.getLogger()
-				.info("Restarting the Monitor in 5sec... repeating every " + Config.getInstance().getSnowFallDelay()
-						+ "sec.");
-		SnowControl.snowMonitorTaskID = plugin
-				.getServer()
-				.getScheduler()
-				.scheduleSyncRepeatingTask(plugin, new SnowMonitor(plugin), 5L * 20L,
-						Config.getInstance().getSnowFallDelay() * 20L);
+		plugin.startScheduler();
 	}
 
 	private void loadKeys() {
@@ -160,6 +152,11 @@ public class Config {
 		return plugin.getConfig().getBoolean("debug", false);
 	}
 
+	public boolean isMetricsEnabled()
+	{
+		return plugin.getConfig().getBoolean("Metrics", true);
+	}
+
 	public boolean isAccumulationEnabled() {
 		return plugin.getConfig().getBoolean("SnowFall.AccumulationEnabled", true);
 	}
@@ -173,11 +170,11 @@ public class Config {
 	}
 
 	public float getChanceToAccumulate() {
-		return (float) (plugin.getConfig().getDouble("SnowFall.AccumulationChance", 10) / 100);
+		return (float) (plugin.getConfig().getDouble("SnowFall.AccumulationChance", 10));
 	}
 
 	public float getChanceToMelt() {
-		return (float) (plugin.getConfig().getDouble("SnowFall.MeltingChance", 10) / 100);
+		return (float) (plugin.getConfig().getDouble("SnowFall.MeltingChance", 10));
 	}
 
 	public float getChanceToFallThrough() {
@@ -186,10 +183,6 @@ public class Config {
 
 	public long getSnowFallDelay() {
 		return plugin.getConfig().getLong("SnowFall.CheckEvery", 10);
-	}
-
-	public byte getMaxAccumulation() {
-		return getMaxAccumulation(null);
 	}
 
 	public byte getMaxAccumulation(Material mat) {
