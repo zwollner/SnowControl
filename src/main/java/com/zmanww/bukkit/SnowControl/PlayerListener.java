@@ -130,8 +130,7 @@ public class PlayerListener implements Listener {
 				event.getPlayer().sendMessage("MinSurrounding=" + SnowManager.getMinSurrounding(block, (byte) -1));
 				event.getPlayer().sendMessage("MaxSurrounding=" + SnowManager.getMaxSurrounding(block, (byte) -1));
 				event.getPlayer().sendMessage("canSnowBeAdded=" + SnowManager.canSnowBeAdded(block));
-				event.getPlayer().sendMessage(
-						"canSnowBeAddedAbove=" + SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)));
+				event.getPlayer().sendMessage("canSnowBeAddedAbove=" + SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)));
 
 				List<Block> snowBlocks = SnowManager.getBlocksToIncreaseUnder(event.getBlock());
 				for (Block blk : snowBlocks) {
@@ -142,10 +141,8 @@ public class PlayerListener implements Listener {
 			} else if (event.getItemInHand().getType() == Material.SNOW_BLOCK) {
 				event.getPlayer().sendMessage("Increasing Snow Level");
 
-				boolean canIncrease = false;
-				if (SnowManager.canSnowBeAdded(block)) {
-					canIncrease = true;
-				} else if (SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP))) {
+				boolean canIncrease = SnowManager.canSnowBeAdded(block);
+				if (!canIncrease && SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP))) {
 					block = block.getRelative(BlockFace.UP);
 					canIncrease = true;
 				}
