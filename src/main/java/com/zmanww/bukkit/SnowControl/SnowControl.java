@@ -41,10 +41,13 @@ public class SnowControl extends JavaPlugin implements Listener {
 
 	public static Map<Player, String> pendingCommand = new HashMap<>();
 
+	private boolean debug = false;
+
 	private SnowMonitor snowMonitor;
 
 	public void onEnable() {
 		plugin = this;
+		load();
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(worldListener, this);
 		getCommand("snowcontrol").setExecutor(new CommandManager());
@@ -61,6 +64,11 @@ public class SnowControl extends JavaPlugin implements Listener {
 				// Failed to submit the stats :-(
 			}
 		}
+	}
+
+	public void load()
+	{
+		debug = Config.getInstance().debugEnabled();
 	}
 
 	public void startScheduler()
@@ -82,10 +90,11 @@ public class SnowControl extends JavaPlugin implements Listener {
 		this.saveConfig();
 	}
 
-	public void debugLog(String string) {
-		if (Config.getInstance().debugEnabled()) {
+	public void debugLog(String string)
+	{
+		if (debug)
+		{
 			this.getLogger().log(Level.INFO, "<DEBUG> " + string);
 		}
-
 	}
 }

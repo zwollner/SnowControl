@@ -35,19 +35,20 @@ public class SnowMonitor extends BukkitRunnable
 {
 	private SnowControl plugin;
 	private Random rnd = new Random();
-	private float chanceToAccumulateChunk = 100, chanceToAccumulateBlock, chanceToMeltChunk = 100, chanceToMeltBlock;
-	private int blocksPerChunkToAccumulate, blocksPerChunkToMelt, maxChunks = 441, minChunks = 1;
+	private float chanceToAccumulateBlock, chanceToMeltBlock;
+	private int blocksPerChunkToAccumulate, blocksPerChunkToMelt, maxChunks, minLightLevel;
 	private boolean accumulation, melt;
 
 	public SnowMonitor(SnowControl plugin)
 	{
 		super();
 		this.plugin = plugin;
-		chanceToAccumulateBlock = (float) Config.getInstance().getChanceToAccumulate() / 100f; //TODO: Change config
-		chanceToMeltBlock = Config.getInstance().getChanceToMelt() / 100f; //TODO: Change config
+		chanceToAccumulateBlock = Config.getInstance().getChanceToAccumulate() / 100f;
+		chanceToMeltBlock = Config.getInstance().getChanceToMelt() / 100f;
 		accumulation = Config.getInstance().isAccumulationEnabled();
 		melt = Config.getInstance().isMeltingEnabled();
-		//TODO: Read configs for: maxChunks, minChunks, chanceToAccumulateChunk, chanceToMeltChunk
+		maxChunks = Config.getInstance().getMaxChunksPerCheck();
+		minLightLevel = Config.getInstance().getMinLightLevel();
 
 		// Calculate stuff, we don't need to do this every time we run our loops
 		blocksPerChunkToAccumulate = (int) Math.ceil(256 * chanceToAccumulateBlock);
@@ -134,16 +135,15 @@ public class SnowMonitor extends BukkitRunnable
 		for(String worldName : Config.getInstance().enabledWorlds)
 		{
 			World world = plugin.getServer().getWorld(worldName);
-			if(world == null)
-				continue;
+			if(world == null || !((accumulation && world.hasStorm()) || (melt && !world.hasStorm()))) continue;
 			Chunk[] chunks = world.getLoadedChunks();
 			plugin.debugLog("Checking " + chunks.length + " chunks in " + worldName);
+			chunks = getRandomElements(Math.min(chunks.length, maxChunks), chunks);
 			if(accumulation && world.hasStorm())
 			{
-				chunks = getRandomElements(Math.min(Math.max((int) Math.ceil(chunks.length * chanceToAccumulateChunk), minChunks), maxChunks), chunks); // I know it's not perfect, but we have to sacrifice precision for performance
 				for(Chunk chunk : chunks)
 				{
-					List<Pos2D> blocks = generateRandom2DPosList(blocksPerChunkToAccumulate); // I know it's not perfect, but we have to sacrifice precision for performance
+					List<Pos2D> blocks = generateRandom2DPosList(blocksPerChunkToAccumulate);
 					for(Pos2D pos : blocks)
 					{
 						Block block = SnowManager.getHighestNonAirBlock(pos.getX() + chunk.getX() * 16, pos.getY() + chunk.getZ() * 16, world);
@@ -169,10 +169,9 @@ public class SnowMonitor extends BukkitRunnable
 			}
 			else if(melt && !world.hasStorm())
 			{
-				chunks = getRandomElements(Math.min(Math.max((int) Math.ceil(chunks.length * chanceToMeltChunk), minChunks), maxChunks), chunks); // I know it's not perfect, but we have to sacrifice precision for performance
 				for(final org.bukkit.Chunk chunk : chunks)
 				{
-					List<Pos2D> blocks = generateRandom2DPosList(blocksPerChunkToMelt); // I know it's not perfect, but we have to sacrifice precision for performance
+					List<Pos2D> blocks = generateRandom2DPosList(blocksPerChunkToMelt);
 					for(Pos2D pos : blocks)
 					{
 						Block block = SnowManager.getHighestNonAirBlock(pos.getX() + chunk.getX() * 16, pos.getY() + chunk.getZ() * 16, world);
@@ -193,9 +192,9 @@ public class SnowMonitor extends BukkitRunnable
 										//noinspection deprecation
 										blk.setData((byte) 7);
 									}
-									if(blk.getType() == Material.SNOW && blk.getLightFromSky() >= Config.getInstance().getMinLightLevel())
+									if(blk.getType() == Material.SNOW && blk.getLightFromSky() >= minLightLevel)
 									{
-										SnowManager.decreaseSnowLevel(new Location(world, blk.getX(), blk.getY(), blk.getZ())); // Melt it down
+										SnowManager.decreaseSnowLevel(blk); // Melt it down
 									}
 								}
 							}

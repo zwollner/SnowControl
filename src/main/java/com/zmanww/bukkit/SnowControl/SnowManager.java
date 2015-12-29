@@ -85,20 +85,10 @@ public class SnowManager {
 	}
 
 	public static boolean canSnowInBiome(Biome biome) {
-		if (biome.name().toUpperCase().contains("ICE_")) {
-			return true;
-		}
-		if (biome.name().toUpperCase().contains("COLD_")) {
-			return true;
-		}
-		if (biome.name().toUpperCase().contains("FROZEN_")) {
-			return true;
-		}
-		return false;
+		return biome.name().toUpperCase().contains("ICE_") || biome.name().toUpperCase().contains("COLD_") || biome.name().toUpperCase().contains("FROZEN_");
 	}
 
-	public static void decreaseSnowLevel(Location loc) {
-		Block block = loc.getBlock();
+	public static void decreaseSnowLevel(Block block) {
 		if (block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK) {
 			byte blkData = getSnowValue(block);
 			if (blkData >= getMinSurrounding(block, (byte) 0) && blkData > getMaxSurrounding(block, (byte) 0, true) - 2) {
