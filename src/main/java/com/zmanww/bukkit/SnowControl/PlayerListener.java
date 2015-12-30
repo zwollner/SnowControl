@@ -169,8 +169,7 @@ public class PlayerListener implements Listener {
 					}
 					if (blk.getLightFromSky() >= 12) {
 						// Melt it down
-						SnowManager.decreaseSnowLevel(new Location(event.getBlock().getWorld(), blk.getX(), blk.getY(),
-								blk.getZ()));
+						SnowManager.decreaseSnowLevel(blk);
 					}
 				}
 				event.getPlayer().sendMessage("**");
