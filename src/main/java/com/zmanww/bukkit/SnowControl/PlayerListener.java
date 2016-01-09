@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -43,7 +44,7 @@ public class PlayerListener implements Listener {
 		plugin = instance;
 	}
 
-	@EventHandler()
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void blockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		if (block.getType() == Material.ICE) {
