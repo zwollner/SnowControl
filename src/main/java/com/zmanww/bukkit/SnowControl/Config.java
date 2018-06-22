@@ -151,11 +151,6 @@ public class Config {
 		return plugin.getConfig().getBoolean("debug", false);
 	}
 
-	public boolean isMetricsEnabled()
-	{
-		return plugin.getConfig().getBoolean("Metrics", true);
-	}
-
 	public boolean isAccumulationEnabled() {
 		return plugin.getConfig().getBoolean("SnowFall.AccumulationEnabled", true);
 	}

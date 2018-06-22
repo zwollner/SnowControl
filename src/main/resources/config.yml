@@ -62,5 +62,3 @@ SnowFall: #this is only in biomes where snow falls naturally
     - STONE
     - WOOD
     - WOOL
-# Please don't turn it off
-Metrics: true
