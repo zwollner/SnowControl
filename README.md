@@ -122,11 +122,3 @@ SnowFall: #this is only in biomes where snow falls naturally
 * Make deeper snow slow down players and/or mobs.
 * Create custom snow related recipes (ideas welcome)
 * Enable for snow on mountains not in a snowy biome
-
-##
-*This plugin utilizes Hidendra's plugin metrics system, which means some anonymous information will be collected and sent to mcstats.org.
-This allows me to track how many servers are actually running the plugin, and the larger user base I have the more likely I am to add features.
-If you wish to opt out of this service, it can be done by editing plugins/Plugin Metrics/config.yml*
-
-<img src="http://i.mcstats.org/SnowControl/Global+Statistics.borderless.png">
-##

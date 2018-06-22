@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -85,20 +84,10 @@ public class SnowManager {
 	}
 
 	public static boolean canSnowInBiome(Biome biome) {
-		if (biome.name().toUpperCase().contains("ICE_")) {
-			return true;
-		}
-		if (biome.name().toUpperCase().contains("COLD_")) {
-			return true;
-		}
-		if (biome.name().toUpperCase().contains("FROZEN_")) {
-			return true;
-		}
-		return false;
+		return biome.name().contains("ICE_") || biome.name().contains("COLD_") || biome.name().contains("_COLD") || biome.name().contains("FROZEN_");
 	}
 
-	public static void decreaseSnowLevel(Location loc) {
-		Block block = loc.getBlock();
+	public static void decreaseSnowLevel(Block block) {
 		if (block.getType() == Material.SNOW || block.getType() == Material.SNOW_BLOCK) {
 			byte blkData = getSnowValue(block);
 			if (blkData >= getMinSurrounding(block, (byte) 0) && blkData > getMaxSurrounding(block, (byte) 0, true) - 2) {
@@ -252,10 +241,7 @@ public class SnowManager {
 			// This is essentially a full block
 			return true;
 		}
-		if (Config.getInstance().canAccumulateOn.contains(block.getType())) {
-			return true;
-		}
-		return false;
+		return Config.getInstance().canAccumulateOn.contains(block.getType());
 	}
 
 	public static boolean canSnowBeAdded(Block block) {
@@ -263,9 +249,7 @@ public class SnowManager {
 			return true;
 		}
 		if (canAccumulateOn(block.getRelative(BlockFace.DOWN))) {
-			if (Config.getInstance().canReplace.contains(block.getType())) {
-				return true;
-			}
+			return Config.getInstance().canReplace.contains(block.getType());
 		}
 		return false;
 	}

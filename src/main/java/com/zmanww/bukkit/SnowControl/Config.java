@@ -59,9 +59,8 @@ public class Config {
 	public void reload() {
 		plugin.reloadConfig(); // Force reload
 		instance = null;// Force all objects to reload.
-
-		// restart the Monitor
-		plugin.startScheduler();
+		plugin.load();
+		plugin.startScheduler(); // restart the Monitor
 	}
 
 	private void loadKeys() {
@@ -152,11 +151,6 @@ public class Config {
 		return plugin.getConfig().getBoolean("debug", false);
 	}
 
-	public boolean isMetricsEnabled()
-	{
-		return plugin.getConfig().getBoolean("Metrics", true);
-	}
-
 	public boolean isAccumulationEnabled() {
 		return plugin.getConfig().getBoolean("SnowFall.AccumulationEnabled", true);
 	}
@@ -201,4 +195,8 @@ public class Config {
 		return plugin.getConfig().getInt("SnowFall.MinLightLevelToMelt", 12);
 	}
 
+	public int getMaxChunksPerCheck()
+	{
+		return Math.min(plugin.getConfig().getInt("SnowFall.MaxChunksPerWorldAndCheck", 441), 1);
+	}
 }

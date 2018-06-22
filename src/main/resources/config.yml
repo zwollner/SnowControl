@@ -9,6 +9,7 @@
 
 SnowFall: #this is only in biomes where snow falls naturally
   CheckEvery: 10 #number in seconds
+  MaxChunksPerWorldAndCheck: 441 #max number of chunks to check per world every check
   AccumulationEnabled: true
   AccumulationChance: 1 #percent 0-100
   MaxAccumulationDefault: 7 # number of 'layers' of snow
@@ -61,5 +62,3 @@ SnowFall: #this is only in biomes where snow falls naturally
     - STONE
     - WOOD
     - WOOL
-# Please don't turn it off
-Metrics: true

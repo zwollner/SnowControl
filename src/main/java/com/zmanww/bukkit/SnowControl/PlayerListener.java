@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -43,7 +44,7 @@ public class PlayerListener implements Listener {
 		plugin = instance;
 	}
 
-	@EventHandler()
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void blockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		if (block.getType() == Material.ICE) {
@@ -130,8 +131,7 @@ public class PlayerListener implements Listener {
 				event.getPlayer().sendMessage("MinSurrounding=" + SnowManager.getMinSurrounding(block, (byte) -1));
 				event.getPlayer().sendMessage("MaxSurrounding=" + SnowManager.getMaxSurrounding(block, (byte) -1));
 				event.getPlayer().sendMessage("canSnowBeAdded=" + SnowManager.canSnowBeAdded(block));
-				event.getPlayer().sendMessage(
-						"canSnowBeAddedAbove=" + SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)));
+				event.getPlayer().sendMessage("canSnowBeAddedAbove=" + SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP)));
 
 				List<Block> snowBlocks = SnowManager.getBlocksToIncreaseUnder(event.getBlock());
 				for (Block blk : snowBlocks) {
@@ -142,10 +142,8 @@ public class PlayerListener implements Listener {
 			} else if (event.getItemInHand().getType() == Material.SNOW_BLOCK) {
 				event.getPlayer().sendMessage("Increasing Snow Level");
 
-				boolean canIncrease = false;
-				if (SnowManager.canSnowBeAdded(block)) {
-					canIncrease = true;
-				} else if (SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP))) {
+				boolean canIncrease = SnowManager.canSnowBeAdded(block);
+				if (!canIncrease && SnowManager.canSnowBeAdded(block.getRelative(BlockFace.UP))) {
 					block = block.getRelative(BlockFace.UP);
 					canIncrease = true;
 				}
@@ -172,8 +170,7 @@ public class PlayerListener implements Listener {
 					}
 					if (blk.getLightFromSky() >= 12) {
 						// Melt it down
-						SnowManager.decreaseSnowLevel(new Location(event.getBlock().getWorld(), blk.getX(), blk.getY(),
-								blk.getZ()));
+						SnowManager.decreaseSnowLevel(blk);
 					}
 				}
 				event.getPlayer().sendMessage("**");
