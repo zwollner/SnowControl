@@ -19,17 +19,16 @@
  */
 package com.zmanww.bukkit.SnowControl;
 
-import java.io.IOException;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
-
-public class SnowControl extends JavaPlugin implements Listener {
+public class SnowControl extends JavaPlugin implements Listener
+{
 	public static SnowControl plugin;
 
 	private final PlayerListener playerListener = new PlayerListener(this);
@@ -52,18 +51,6 @@ public class SnowControl extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(worldListener, this);
 		getCommand("snowcontrol").setExecutor(new CommandManager());
 		startScheduler();
-		if(Config.getInstance().isMeltingEnabled())
-		{
-			try
-			{
-				Metrics metrics = new Metrics(this);
-				metrics.start();
-			}
-			catch(IOException e)
-			{
-				// Failed to submit the stats :-(
-			}
-		}
 	}
 
 	public void load()
